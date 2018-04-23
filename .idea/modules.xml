@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/YPWaveViewSample.iml" filepath="$PROJECT_DIR$/YPWaveViewSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ypwaveview/ypwaveview.iml" filepath="$PROJECT_DIR$/ypwaveview/ypwaveview.iml" />
     </modules>
   </component>
 </project>
