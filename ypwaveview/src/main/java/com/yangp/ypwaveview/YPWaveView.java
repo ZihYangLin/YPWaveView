@@ -35,11 +35,11 @@ public class YPWaveView extends View {
     /*初始常數*/
     private static final int DEFAULT_PROGRESS = 405;
     private static final int DEFAULT_MAX = 1000;
-    private static final int DEFAULT_BEHIND_WAVE_COLOR = Color.parseColor("#443030d5");
-    private static final int DEFAULT_FRONT_WAVE_COLOR = Color.parseColor("#FF3030d5");
-    private static final int DEFAULT_BORDER_COLOR = Color.parseColor("#000000");
+    public static final int DEFAULT_BEHIND_WAVE_COLOR = Color.parseColor("#443030d5");
+    public static final int DEFAULT_FRONT_WAVE_COLOR = Color.parseColor("#FF3030d5");
+    public static final int DEFAULT_BORDER_COLOR = Color.parseColor("#000000");
     private static final int DEFAULT_BORDER_WIDTH = 5;
-    private static final int DEFAULT_TEXT_COLOR = Color.parseColor("#000000");
+    public static final int DEFAULT_TEXT_COLOR = Color.parseColor("#000000");
     private static final boolean DEFAULT_ENABLE_ANIMATION = false;
 
     /*參數值*/
