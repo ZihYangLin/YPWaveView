@@ -8,14 +8,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by yangp on 2018/4/23.
@@ -26,7 +28,8 @@ public class YPWaveView extends View {
 
     /*位移Animator*/
     private float shiftX1 = 0;
-    private Timer timer = new Timer(true);
+    private HandlerThread thread = new HandlerThread("YPWaveView" + hashCode());
+    private Handler animHandler, uiHandler;
 
     /*畫筆*/
     private Paint mBorderPaint = new Paint(); //邊線的Paint
@@ -76,13 +79,18 @@ public class YPWaveView extends View {
         mMax = attributes.getInt(R.styleable.YPWaveView_max, DEFAULT_MAX);
         mBorderWidth = attributes.getInt(R.styleable.YPWaveView_borderWidth, DEFAULT_BORDER_WIDTH);
         isAnimation = attributes.getBoolean(R.styleable.YPWaveView_animatorEnable, DEFAULT_ENABLE_ANIMATION);
-        invalidate();
 
         /*設定抗鋸齒 & 設定為"線"*/
         mBorderPaint.setAntiAlias(true);
         mBorderPaint.setStyle(Paint.Style.STROKE);
 
+        /*開啟動畫執行緒*/
+        thread.start();
+        animHandler = new Handler(thread.getLooper());
+        uiHandler = new UIHandler();
 
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
     /**
@@ -91,14 +99,23 @@ public class YPWaveView extends View {
     public void setProgress(int progress) {
         if (progress <= mMax) {
             mProgress = progress;
-            invalidate();
+            Message message = Message.obtain(uiHandler);
+            message.sendToTarget();
         }
     }
 
     public void startAnimation() {
         isAnimation = true;
         if (getWidth() > 0 && getHeight() > 0) {
-            timer.schedule(new MyTimer(), 0, 50);
+            animHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    createShader();
+                    Message message = Message.obtain(uiHandler);
+                    message.sendToTarget();
+                    animHandler.postDelayed(this, 25);
+                }
+            });
         }
     }
 
@@ -109,7 +126,8 @@ public class YPWaveView extends View {
         if (mMax != max) {
             if (max >= mProgress) {
                 mMax = max;
-                invalidate();
+                Message message = Message.obtain(uiHandler);
+                message.sendToTarget();
             }
         }
     }
@@ -120,7 +138,8 @@ public class YPWaveView extends View {
     public void setBorderColor(int color) {
         mBorderColor = color;
         mBorderPaint.setColor(mBorderColor);
-        invalidate();
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
 
@@ -130,7 +149,8 @@ public class YPWaveView extends View {
     public void setBorderWidth(int width) {
         mBorderWidth = width;
         mBorderPaint.setStrokeWidth(mBorderWidth);
-        invalidate();
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
     @Override
@@ -174,7 +194,7 @@ public class YPWaveView extends View {
         shiftX1 -= 0.25f; //位移量
         float shiftX2 = shiftX1 + (value / 4); //前後波相差 1/4波
         int waveLevel = value / 20;
-
+        Log.i("YPWaveView", "shift1:" + shiftX1 + " shift2:" + shiftX2);
         /*建立後波 (先後再前覆蓋)*/
         wavePaint.setColor(mBehindWaveColor);
         for (int x1 = 0; x1 < x2; x1++) {
@@ -213,11 +233,14 @@ public class YPWaveView extends View {
         }
     }
 
-    class MyTimer extends TimerTask {
+    class UIHandler extends Handler {
+        UIHandler() {
+            super(Looper.getMainLooper());
+        }
 
         @Override
-        public void run() {
-            createShader();
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
             invalidate();
         }
     }
