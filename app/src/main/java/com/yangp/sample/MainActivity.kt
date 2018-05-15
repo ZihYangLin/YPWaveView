@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import com.yangp.ypwaveview.YPWaveView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -54,6 +55,31 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
         viewBorde.setBackgroundColor(YPWaveView.DEFAULT_BORDER_COLOR)
         viewText.setBackgroundColor(YPWaveView.DEFAULT_TEXT_COLOR)
         colorArray = resources.getIntArray(R.array.rainbow)
+
+        seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setAnimationSpeed(progress)
+            }
+        })
+
+        seekbar_width.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setBorderWidth(progress + 1)
+            }
+        })
+        /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
         recyclerView = layoutInflater.inflate(R.layout.color_picker, null) as RecyclerView
         recyclerView!!.layoutManager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)

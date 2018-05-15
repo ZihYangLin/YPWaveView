@@ -25,8 +25,10 @@ import java.util.Locale;
 
 public class YPWaveView extends View {
 
+
     /*位移Animator*/
     private float shiftX1 = 0;
+    private int speed = 25;
     private HandlerThread thread = new HandlerThread("YPWaveView" + hashCode());
     private Handler animHandler, uiHandler;
 
@@ -112,7 +114,7 @@ public class YPWaveView extends View {
                     createShader();
                     Message message = Message.obtain(uiHandler);
                     message.sendToTarget();
-                    animHandler.postDelayed(this, 25);
+                    animHandler.postDelayed(this, speed);
                 }
             });
         }
@@ -176,6 +178,14 @@ public class YPWaveView extends View {
         mBorderPaint.setStrokeWidth(mBorderWidth);
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
+    }
+
+
+    /**
+     * 設定動畫速度
+     */
+    public void setAnimationSpeed(int speed) {
+        this.speed = speed;
     }
 
     @Override
