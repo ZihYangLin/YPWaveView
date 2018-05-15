@@ -1,5 +1,7 @@
 package com.yangp.sample
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -7,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.DecelerateInterpolator
 import android.widget.SeekBar
 import com.yangp.ypwaveview.YPWaveView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -64,7 +67,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setAnimationSpeed(progress)
+                waveView2.setAnimationSpeed(100 - progress)
             }
         })
 
@@ -92,7 +95,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
         })
 
-        seekbar_offset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        seekbar_waveoffset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -103,6 +106,19 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 waveView2.setWaveOffset(progress)
             }
         })
+
+        seekbar_waveStrong.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setWaveStrong(progress)
+            }
+        })
+
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
         recyclerView = layoutInflater.inflate(R.layout.color_picker, null) as RecyclerView
@@ -131,6 +147,25 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             viewType = ViewType.TEXT
             colorPicker?.show()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewFrontWave.setOnClickListener(null)
+        viewBehindWave.setOnClickListener(null)
+        viewBorde.setOnClickListener(null)
+        viewText.setOnClickListener(null)
+    }
+
+    public fun onRefresh(v: View) {
+        //創建水位動畫Set
+        val animatorSet = AnimatorSet()
+        val animPay = ObjectAnimator.ofInt(
+                waveView2, "progress", 0, 476)
+        animPay.duration = 1500
+        animPay.interpolator = DecelerateInterpolator()
+        animatorSet.playTogether(animPay)
+        animatorSet.start()
     }
 
     inner class ColorAdapter(private val colorArray: IntArray, private val listener: OnColorClickedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

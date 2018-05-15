@@ -28,8 +28,9 @@ public class YPWaveView extends View {
 
     /*位移Animator*/
     private float shiftX1 = 0;
+    private int strong = 50;
     private float shiftOffset = -0.25f;
-    private int waveOffset = 0;
+    private int waveOffset = 25;
     private int speed = 25;
     private HandlerThread thread = new HandlerThread("YPWaveView" + hashCode());
     private Handler animHandler, uiHandler;
@@ -116,10 +117,16 @@ public class YPWaveView extends View {
                     createShader();
                     Message message = Message.obtain(uiHandler);
                     message.sendToTarget();
-                    animHandler.postDelayed(this, speed);
+                    if (isAnimation) {
+                        animHandler.postDelayed(this, speed);
+                    }
                 }
             });
         }
+    }
+
+    public void stopAnimation() {
+        isAnimation = false;
     }
 
     /**
@@ -205,6 +212,13 @@ public class YPWaveView extends View {
         this.waveOffset = offset;
     }
 
+    /**
+     * 設定波峰
+     */
+    public void setWaveStrong(int strong) {
+        this.strong = strong;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -243,8 +257,8 @@ public class YPWaveView extends View {
         int x2 = getWidth() + 1;//寬度
         int y2 = getHeight() + 1;//高度
         shiftX1 += shiftOffset; //位移量
-        float shiftX2 = shiftX1 + (value / 4) + waveOffset; //前後波相差 1/4波
-        int waveLevel = value / 20;
+        float shiftX2 = shiftX1 + ((value * waveOffset / 100) / 4); //前後波相差 1/4波
+        int waveLevel = strong * (value / 20) / 100;  // value / 20
         /*建立後波 (先後再前覆蓋)*/
         wavePaint.setColor(mBehindWaveColor);
         for (int x1 = 0; x1 < x2; x1++) {
@@ -268,10 +282,19 @@ public class YPWaveView extends View {
         textPaint.setAntiAlias(true);
         float textHeight = textPaint.descent() + textPaint.ascent();
         canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, (getHeight() - textHeight) / 2.0f, textPaint);
-
         mViewPaint.setShader(new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP));
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        if (animHandler != null) {
+            animHandler.removeCallbacksAndMessages(null);
+        }
+        if (thread != null) {
+            thread.quit();
+        }
+        super.onDetachedFromWindow();
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
