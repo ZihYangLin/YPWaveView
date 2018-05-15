@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.Locale;
@@ -77,7 +76,7 @@ public class YPWaveView extends View {
         mTextColor = attributes.getColor(R.styleable.YPWaveView_textColor, DEFAULT_TEXT_COLOR);
         mProgress = attributes.getInt(R.styleable.YPWaveView_progress, DEFAULT_PROGRESS);
         mMax = attributes.getInt(R.styleable.YPWaveView_max, DEFAULT_MAX);
-        mBorderWidth = attributes.getInt(R.styleable.YPWaveView_borderWidth, DEFAULT_BORDER_WIDTH);
+        mBorderWidth = attributes.getInt(R.styleable.YPWaveView_borderWidth2, DEFAULT_BORDER_WIDTH);
         isAnimation = attributes.getBoolean(R.styleable.YPWaveView_animatorEnable, DEFAULT_ENABLE_ANIMATION);
 
         /*設定抗鋸齒 & 設定為"線"*/
@@ -142,6 +141,32 @@ public class YPWaveView extends View {
         message.sendToTarget();
     }
 
+    /**
+     * 設定前波顏色
+     */
+    public void setFrontWaveColor(int color) {
+        mFrontWaveColor = color;
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
+    }
+
+    /**
+     * 設定後波顏色
+     */
+    public void setBehindWaveColor(int color) {
+        mBehindWaveColor = color;
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
+    }
+
+    /**
+     * 設定文字顏色
+     */
+    public void setTextColor(int color) {
+        mTextColor = color;
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
+    }
 
     /**
      * 設定邊線寬度
@@ -156,7 +181,6 @@ public class YPWaveView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.i("WaveView", String.format("W:%d H:%d ", w, h));
         value = Math.min(w, h);
         createShader();
         if (isAnimation) {
@@ -194,7 +218,6 @@ public class YPWaveView extends View {
         shiftX1 -= 0.25f; //位移量
         float shiftX2 = shiftX1 + (value / 4); //前後波相差 1/4波
         int waveLevel = value / 20;
-        Log.i("YPWaveView", "shift1:" + shiftX1 + " shift2:" + shiftX2);
         /*建立後波 (先後再前覆蓋)*/
         wavePaint.setColor(mBehindWaveColor);
         for (int x1 = 0; x1 < x2; x1++) {

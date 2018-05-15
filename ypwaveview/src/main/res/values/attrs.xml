@@ -5,7 +5,7 @@
     <attr name="frontColor" format="color" />
     <attr name="behideColor" format="color" />
     <attr name="borderColor" format="color" />
-    <attr name="borderWidth" format="integer" />
+    <attr name="borderWidth2" format="integer" />
     <attr name="textColor" format="color" />
     <attr name="animatorEnable" format="boolean" />
 
@@ -15,7 +15,7 @@
         <attr name="frontColor" />
         <attr name="behideColor" />
         <attr name="borderColor" />
-        <attr name="borderWidth" />
+        <attr name="borderWidth2" />
         <attr name="textColor" />
         <attr name="animatorEnable" />
     </declare-styleable>
