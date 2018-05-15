@@ -79,6 +79,30 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 waveView2.setBorderWidth(progress + 1)
             }
         })
+
+        seekbar_offset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setWaveShiftOffset((progress - 50).toFloat() / 50f)
+            }
+        })
+
+        seekbar_offset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setWaveOffset(progress)
+            }
+        })
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
         recyclerView = layoutInflater.inflate(R.layout.color_picker, null) as RecyclerView

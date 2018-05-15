@@ -135,4 +135,51 @@
             android:max="100"
             android:progress="50" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="偏移位" />
+
+        <SeekBar
+            android:id="@+id/seekbar_offset"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="5"
+            android:max="100"
+            android:progress="50" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="水波偏移位" />
+
+        <SeekBar
+            android:id="@+id/seekbar_waveoffset"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="5"
+            android:max="100"/>
+    </LinearLayout>
 </LinearLayout>

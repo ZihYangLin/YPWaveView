@@ -28,6 +28,8 @@ public class YPWaveView extends View {
 
     /*位移Animator*/
     private float shiftX1 = 0;
+    private float shiftOffset = -0.25f;
+    private int waveOffset = 0;
     private int speed = 25;
     private HandlerThread thread = new HandlerThread("YPWaveView" + hashCode());
     private Handler animHandler, uiHandler;
@@ -188,6 +190,21 @@ public class YPWaveView extends View {
         this.speed = speed;
     }
 
+    /**
+     * 設定水波偏移
+     */
+    public void setWaveShiftOffset(float offset) {
+        this.shiftOffset = offset;
+    }
+
+
+    /**
+     * 設定水波位移量
+     */
+    public void setWaveOffset(int offset) {
+        this.waveOffset = offset;
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -225,8 +242,8 @@ public class YPWaveView extends View {
         float level = ((((float) (mMax - mProgress)) / (float) mMax) * value) + ((getHeight() / 2) - (value / 2)); //水位的高度
         int x2 = getWidth() + 1;//寬度
         int y2 = getHeight() + 1;//高度
-        shiftX1 -= 0.25f; //位移量
-        float shiftX2 = shiftX1 + (value / 4); //前後波相差 1/4波
+        shiftX1 += shiftOffset; //位移量
+        float shiftX2 = shiftX1 + (value / 4) + waveOffset; //前後波相差 1/4波
         int waveLevel = value / 20;
         /*建立後波 (先後再前覆蓋)*/
         wavePaint.setColor(mBehindWaveColor);
