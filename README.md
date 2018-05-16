@@ -5,7 +5,7 @@ A wave-like progressbar on Android which has three shapes, circle, square and he
 Sample
 ======
 
-<img src="webps/device-2018-05-16-164531.webp" width="246">
+<img src="webps/ypwaveview_sample.gif" width="246">
 
 
 Attributes
