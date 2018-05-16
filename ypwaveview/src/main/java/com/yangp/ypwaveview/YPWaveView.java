@@ -46,7 +46,7 @@ public class YPWaveView extends View {
 
     /*位移Animator*/
     private float shiftX1 = 0;
-    private float shiftOffset = -0.25f;
+    private float waveVector = -0.25f;
     private int waveOffset = 25;
     private int speed = 25;
     private HandlerThread thread = new HandlerThread("YPWaveView_" + hashCode());
@@ -55,7 +55,6 @@ public class YPWaveView extends View {
     /*畫筆*/
     private Paint mBorderPaint = new Paint(); //邊線的Paint
     private Paint mViewPaint = new Paint(); //水位的Paint
-    //    private Paint mPointPaint = new Paint();
     private Path pathHeart; //愛心路徑
 
     /*初始常數*/
@@ -114,14 +113,10 @@ public class YPWaveView extends View {
         mBorderPaint.setStrokeWidth(mBorderWidth);
         mBorderPaint.setColor(mBorderColor);
 
-//        mPointPaint.setStyle(Paint.Style.FILL);
-//        mPointPaint.setColor(Color.parseColor("#8e2710"));
-
         /*開啟動畫執行緒*/
         thread.start();
         animHandler = new Handler(thread.getLooper());
         uiHandler = new UIHandler(new WeakReference<View>(this));
-
 
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
@@ -243,8 +238,8 @@ public class YPWaveView extends View {
      * 設定前後水波每次刷新偏移多少
      * 0-100
      */
-    public void setWaveShiftOffset(float offset) {
-        this.shiftOffset = (offset - 50f) / 50f;
+    public void setWaveVector(float offset) {
+        this.waveVector = (offset - 50f) / 50f;
         createShader();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
@@ -318,6 +313,9 @@ public class YPWaveView extends View {
      * B(t) = X(1-t)^2 + 2t(1-t)Y + Zt^2 , 0 <= t <= n
      */
     private void createShader() {
+        if (getWidth() <= 0 && getHeight() <= 0) {
+            return;
+        }
         double w = (2.0f * Math.PI) / value;
 
         /*建立畫布*/
@@ -332,7 +330,7 @@ public class YPWaveView extends View {
         float level = ((((float) (mMax - mProgress)) / (float) mMax) * value) + ((getHeight() / 2) - (value / 2)); //水位的高度
         int x2 = getWidth() + 1;//寬度
         int y2 = getHeight() + 1;//高度
-        shiftX1 += shiftOffset; //位移量
+        shiftX1 += waveVector; //位移量
         float zzz = (((float) value * ((waveOffset - 50) / 100f)) / ((float) value / 6.25f));
         float shiftX2 = shiftX1 + zzz; //前後波相差
         int waveLevel = mStrong * (value / 20) / 100;  // value / 20
@@ -410,28 +408,6 @@ public class YPWaveView extends View {
                 if (mBorderWidth > 0) {
                     canvas.drawPath(pathHeart, mBorderPaint);
                 }
-//                int wOffset = 0;
-//                int hOffset = 0;
-//                wOffset = (getWidth() - value) / 2;
-//                hOffset = (getHeight() - value) / 2;
-//                mPointPaint.setColor(Color.parseColor("#FF00FF"));
-//                canvas.drawCircle(value / 2 + wOffset, value / 5 + hOffset, 10, mPointPaint);
-//                canvas.drawCircle(5 * value / 14 + wOffset, hOffset, 10, mPointPaint);
-//                canvas.drawCircle(wOffset, value / 15 + hOffset, 10, mPointPaint);
-//                canvas.drawCircle(value / 28 + wOffset, 2 * value / 5 + hOffset, 10, mPointPaint);
-//
-//                canvas.drawCircle(value / 14 + wOffset, 2 * value / 3 + hOffset, 10, mPointPaint);
-//                canvas.drawCircle(3 * value / 7 + wOffset, 5 * value / 6 + hOffset, 10, mPointPaint);
-//                canvas.drawCircle(value / 2 + wOffset, value + hOffset, 10, mPointPaint);
-//
-//                canvas.drawCircle(4 * value / 7 + wOffset, 5 * value / 6 + hOffset, 10, mPointPaint);
-//                canvas.drawCircle(13 * value / 14 + wOffset, 2 * value / 3 + hOffset, 10, mPointPaint);
-//                canvas.drawCircle(27 * value / 28 + wOffset, 2 * value / 5 + hOffset, 10, mPointPaint);
-//
-//                canvas.drawCircle(value + wOffset , value / 15 + hOffset, 10, mPointPaint);
-//                canvas.drawCircle(9 * value / 14 + wOffset , hOffset, 10, mPointPaint);
-//                canvas.drawCircle(value / 2 + wOffset , value / 5 + hOffset, 10, mPointPaint);
-
                 break;
         }
     }

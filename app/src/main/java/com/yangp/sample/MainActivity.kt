@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setBorderWidth(progress + 1f)
+                waveView2.setBorderWidth(progress.toFloat())
             }
         })
 
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setWaveShiftOffset(progress.toFloat())
+                waveView2.setWaveVector(progress.toFloat())
             }
         })
 
@@ -140,6 +140,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
         }
 
+
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
         recyclerView = layoutInflater.inflate(R.layout.color_picker, null) as RecyclerView
@@ -168,6 +169,12 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             viewType = ViewType.TEXT
             colorPicker?.show()
         }
+
+        waveView2.setAnimationSpeed(100 - seekbar.progress)
+        waveView2.setBorderWidth(seekbar_width.progress.toFloat())
+        waveView2.setWaveVector(seekbar_offset.progress.toFloat())
+        waveView2.setWaveOffset(seekbar_waveoffset.progress)
+        waveView2.setWaveStrong(seekbar_waveStrong.progress)
     }
 
     override fun onPause() {
