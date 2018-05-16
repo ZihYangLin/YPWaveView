@@ -1,42 +1,15 @@
 apply plugin: 'com.android.library'
 
-//ext {
-//    bintrayRepo = 'Libraries'
-//    bintrayName = 'YPWaveView'
-//
-//    publishedGroupId = 'com.yangping'
-//    libraryName = 'YPWaveView'
-//    artifact = 'YPWaveView'
-//
-//    libraryDescription = 'A Progress for View Like Wave on Android'
-//
-//    siteUrl = 'https://github.com/ZihYangLin/YPWaveView'
-//    gitUrl = 'https://github.com/ZihYangLin/YPWaveView.git'
-//
-//    libraryVersion = '1.0.1'
-//
-//    developerId = 'yangping'
-//    developerName = 'ZihYang Lin'
-//    developerEmail = 'zcbxvsdf@gmail.com'
-//
-//    licenseName = 'The Apache Software License, Version 2.0'
-//    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//    allLicenses = ["Apache-2.0"]
-//}
-
 tasks.withType(Javadoc) {
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
 }
 android {
-    compileSdkVersion 26
-
-
-
+    compileSdkVersion 16
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 16
         versionCode 1
         versionName "1.0.1"
     }
@@ -61,7 +34,7 @@ group = "com.yangping"
 //发布到JCenter上的项目名字，必须填写
 def libName = "YPWaveView"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.0.0"
+version = "1.0.1"
 /**  上面配置后上传至jcenter后的编译路径是这样的： compile       'com.fighter.maven:mylibs:1.0.0'  **/
 
 

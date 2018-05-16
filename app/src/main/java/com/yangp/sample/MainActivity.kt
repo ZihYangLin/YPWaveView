@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setBorderWidth(progress + 1)
+                waveView2.setBorderWidth(progress.toFloat())
             }
         })
 
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setWaveShiftOffset((progress - 50).toFloat() / 50f)
+                waveView2.setWaveVector(progress.toFloat())
             }
         })
 
@@ -118,6 +118,28 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 waveView2.setWaveStrong(progress)
             }
         })
+        switch_animation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                waveView2.startAnimation()
+            } else {
+                waveView2.stopAnimation()
+            }
+        }
+
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.radioCircle -> {
+                    waveView2.setShape(YPWaveView.Shape.CIRCLE)
+                }
+                R.id.radioSquare -> {
+                    waveView2.setShape(YPWaveView.Shape.SQUARE)
+                }
+                R.id.radioHeart -> {
+                    waveView2.setShape(YPWaveView.Shape.HEART)
+                }
+            }
+        }
+
 
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
@@ -147,6 +169,12 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             viewType = ViewType.TEXT
             colorPicker?.show()
         }
+
+        waveView2.setAnimationSpeed(100 - seekbar.progress)
+        waveView2.setBorderWidth(seekbar_width.progress.toFloat())
+        waveView2.setWaveVector(seekbar_offset.progress.toFloat())
+        waveView2.setWaveOffset(seekbar_waveoffset.progress)
+        waveView2.setWaveStrong(seekbar_waveStrong.progress)
     }
 
     override fun onPause() {
