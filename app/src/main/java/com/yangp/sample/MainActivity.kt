@@ -126,6 +126,20 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
         }
 
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.radioCircle -> {
+                    waveView2.setShape(YPWaveView.Shape.CIRCLE)
+                }
+                R.id.radioSquare -> {
+                    waveView2.setShape(YPWaveView.Shape.SQUARE)
+                }
+                R.id.radioHeart -> {
+                    waveView2.setShape(YPWaveView.Shape.HEART)
+                }
+            }
+        }
+
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
         recyclerView = layoutInflater.inflate(R.layout.color_picker, null) as RecyclerView

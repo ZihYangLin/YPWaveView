@@ -1,0 +1,18 @@
+<resources>
+
+    <string name="app_name">YPWaveView</string>
+    <string name="refresh">Stuff</string>
+    <string name="wave_strong">Crest Strong</string>
+    <string name="wave_offset">Wave offset</string>
+    <string name="wave_vector">Wave vector</string>
+    <string name="speed">Speed</string>
+    <string name="border_width">Border Width</string>
+    <string name="percent_color">Percent Color：</string>
+    <string name="border_color">Border Color：</string>
+    <string name="behind_wave_color">Behind Wave Color：</string>
+    <string name="front_wave_color">Front Wave Color：</string>
+    <string name="square">SQUARE</string>
+    <string name="circle">CIRCLE</string>
+    <string name="animation">Animation</string>
+    <string name="heart">Heart</string>
+</resources>

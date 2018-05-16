@@ -11,8 +11,8 @@
     <string name="border_color">邊線顏色：</string>
     <string name="behind_wave_color">後波顏色：</string>
     <string name="front_wave_color">前波顏色：</string>
-    <string name="square">SQUARE</string>
-    <string name="circle">CIRCLE</string>
-    <string name="animation">Animation</string>
-    <string name="heart">Heart</string>
+    <string name="square">方型</string>
+    <string name="circle">圓型</string>
+    <string name="animation">動畫</string>
+    <string name="heart">心型</string>
 </resources>

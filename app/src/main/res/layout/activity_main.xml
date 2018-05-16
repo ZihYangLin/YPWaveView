@@ -17,17 +17,57 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin="16dp" />
+            android:layout_margin="16dp"
+            app:shapeType="heart" />
     </FrameLayout>
 
-    <Switch
-        android:id="@+id/switch_animation"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:text="動畫" />
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/switch_animation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/animation" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="3"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioCircle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/circle" />
+
+            <RadioButton
+                android:id="@+id/radioSquare"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/square" />
+
+            <RadioButton
+                android:id="@+id/radioHeart"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/heart" />
+        </RadioGroup>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="前波顏色：" />
+            android:text="@string/front_wave_color" />
 
         <View
             android:id="@+id/viewFrontWave"
@@ -55,7 +95,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:text="後波顏色：" />
+            android:text="@string/behind_wave_color" />
 
         <View
             android:id="@+id/viewBehindWave"
@@ -77,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="邊線顏色：" />
+            android:text="@string/border_color" />
 
         <View
             android:id="@+id/viewBorde"
@@ -92,7 +132,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:text="百分比顏色：" />
+            android:text="@string/percent_color" />
 
         <View
             android:id="@+id/viewText"
@@ -114,7 +154,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="邊線寬度" />
+            android:text="@string/border_width" />
 
         <SeekBar
             android:id="@+id/seekbar_width"
@@ -138,7 +178,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="速度" />
+            android:text="@string/speed" />
 
         <SeekBar
             android:id="@+id/seekbar"
@@ -162,7 +202,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="偏移位" />
+            android:text="@string/wave_vector" />
 
         <SeekBar
             android:id="@+id/seekbar_offset"
@@ -170,7 +210,7 @@
             android:layout_height="20dp"
             android:layout_weight="5"
             android:max="100"
-            android:progress="50" />
+            android:progress="25" />
     </LinearLayout>
 
     <LinearLayout
@@ -186,7 +226,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="水波偏移位" />
+            android:text="@string/wave_offset" />
 
         <SeekBar
             android:id="@+id/seekbar_waveoffset"
@@ -210,7 +250,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="波峰設定" />
+            android:text="@string/wave_strong" />
 
         <SeekBar
             android:id="@+id/seekbar_waveStrong"
@@ -224,6 +264,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#3898f7"
         android:onClick="onRefresh"
-        android:text="重填" />
+        android:text="@string/refresh"
+        android:textColor="@color/white" />
 </LinearLayout>

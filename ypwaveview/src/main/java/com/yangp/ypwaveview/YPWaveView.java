@@ -7,6 +7,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Shader;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -25,6 +26,22 @@ import java.util.Locale;
  */
 
 public class YPWaveView extends View {
+    /*類型常數*/
+    public enum Shape {
+        CIRCLE(1), SQUARE(2), HEART(3);
+        int value;
+
+        Shape(int value) {
+            this.value = value;
+        }
+
+        static Shape fromValue(int value) {
+            for (Shape shape : values()) {
+                if (shape.value == value) return shape;
+            }
+            return CIRCLE;
+        }
+    }
 
 
     /*位移Animator*/
@@ -38,6 +55,8 @@ public class YPWaveView extends View {
     /*畫筆*/
     private Paint mBorderPaint = new Paint(); //邊線的Paint
     private Paint mViewPaint = new Paint(); //水位的Paint
+    //    private Paint mPointPaint = new Paint();
+    private Path pathHeart; //愛心路徑
 
     /*初始常數*/
     private static final int DEFAULT_PROGRESS = 405;
@@ -60,6 +79,7 @@ public class YPWaveView extends View {
     private int mTextColor = DEFAULT_TEXT_COLOR; //字體顏色
     private boolean isAnimation = DEFAULT_ENABLE_ANIMATION;
     private int mStrong = DEFAULT_STRONG; //波峰
+    private Shape mShape = Shape.CIRCLE;
     private int value = 0; //寬或高的最小值
 
 
@@ -85,6 +105,7 @@ public class YPWaveView extends View {
         mMax = attributes.getInt(R.styleable.YPWaveView_max, DEFAULT_MAX);
         mBorderWidth = attributes.getDimension(R.styleable.YPWaveView_borderWidthSize, DEFAULT_BORDER_WIDTH);
         mStrong = attributes.getInt(R.styleable.YPWaveView_strong, DEFAULT_STRONG);
+        mShape = Shape.fromValue(attributes.getInt(R.styleable.YPWaveView_shapeType, 1));
         isAnimation = attributes.getBoolean(R.styleable.YPWaveView_animatorEnable, DEFAULT_ENABLE_ANIMATION);
 
         /*設定抗鋸齒 & 設定為"線"*/
@@ -93,10 +114,14 @@ public class YPWaveView extends View {
         mBorderPaint.setStrokeWidth(mBorderWidth);
         mBorderPaint.setColor(mBorderColor);
 
+//        mPointPaint.setStyle(Paint.Style.FILL);
+//        mPointPaint.setColor(Color.parseColor("#8e2710"));
+
         /*開啟動畫執行緒*/
         thread.start();
         animHandler = new Handler(thread.getLooper());
         uiHandler = new UIHandler(new WeakReference<View>(this));
+
 
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
@@ -248,10 +273,32 @@ public class YPWaveView extends View {
         message.sendToTarget();
     }
 
+    public void setShape(Shape shape) {
+        mShape = shape;
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         value = Math.min(w, h);
+        int wOffset = (w - value) / 2;
+        int hOffset = (h - value) / 2;
+        /*===愛心路徑===*/
+        pathHeart = new Path();
+        /*起此點*/
+        pathHeart.moveTo(value / 2 + wOffset, value / 5 + hOffset);
+        /*左上升線*/
+        pathHeart.cubicTo(5 * value / 14 + wOffset, hOffset, wOffset, value / 15 + hOffset, value / 28 + wOffset, 2 * value / 5 + hOffset);
+        /*左下降線*/
+        pathHeart.cubicTo(value / 14 + wOffset, 2 * value / 3 + hOffset, 3 * value / 7 + wOffset, 5 * value / 6 + hOffset, value / 2 + wOffset, 9 * value / 10 + hOffset);
+        /*右下降線*/
+        pathHeart.cubicTo(4 * value / 7 + wOffset, 5 * value / 6 + hOffset, 13 * value / 14 + wOffset, 2 * value / 3 + hOffset, 27 * value / 28 + wOffset, 2 * value / 5 + hOffset);
+        /*右上升線*/
+        pathHeart.cubicTo(value + wOffset, value / 15 + hOffset, 9 * value / 14 + wOffset, hOffset, value / 2 + wOffset, value / 5 + hOffset);
+
+
         createShader();
         if (isAnimation) {
             startAnimation();
@@ -328,11 +375,64 @@ public class YPWaveView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, value / 2f - mBorderWidth, mViewPaint);
+        float radius = (value / 2f) - mBorderWidth;
+        float cx = getWidth() / 2f;
+        float cy = getHeight() / 2f;
 
-        /*畫邊線*/
-        if (mBorderWidth > 0) {
-            canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (value / 2f) - mBorderWidth, mBorderPaint);
+        switch (mShape) {
+            case CIRCLE:
+                canvas.drawCircle(cx, cy, radius, mViewPaint);
+                /*畫邊線*/
+                if (mBorderWidth > 0) {
+                    canvas.drawCircle(cx, cy, radius, mBorderPaint);
+                }
+                break;
+            case SQUARE:
+                canvas.drawRect(
+                        cx - radius
+                        , cy - radius
+                        , cx + radius
+                        , cy + radius
+                        , mViewPaint);
+                /*畫邊線*/
+                if (mBorderWidth > 0) {
+                    canvas.drawRect(
+                            cx - radius
+                            , cy - radius
+                            , cx + radius
+                            , cy + radius
+                            , mBorderPaint);
+                }
+                break;
+            case HEART:
+                canvas.drawPath(pathHeart, mViewPaint);
+                /*畫邊線*/
+                if (mBorderWidth > 0) {
+                    canvas.drawPath(pathHeart, mBorderPaint);
+                }
+//                int wOffset = 0;
+//                int hOffset = 0;
+//                wOffset = (getWidth() - value) / 2;
+//                hOffset = (getHeight() - value) / 2;
+//                mPointPaint.setColor(Color.parseColor("#FF00FF"));
+//                canvas.drawCircle(value / 2 + wOffset, value / 5 + hOffset, 10, mPointPaint);
+//                canvas.drawCircle(5 * value / 14 + wOffset, hOffset, 10, mPointPaint);
+//                canvas.drawCircle(wOffset, value / 15 + hOffset, 10, mPointPaint);
+//                canvas.drawCircle(value / 28 + wOffset, 2 * value / 5 + hOffset, 10, mPointPaint);
+//
+//                canvas.drawCircle(value / 14 + wOffset, 2 * value / 3 + hOffset, 10, mPointPaint);
+//                canvas.drawCircle(3 * value / 7 + wOffset, 5 * value / 6 + hOffset, 10, mPointPaint);
+//                canvas.drawCircle(value / 2 + wOffset, value + hOffset, 10, mPointPaint);
+//
+//                canvas.drawCircle(4 * value / 7 + wOffset, 5 * value / 6 + hOffset, 10, mPointPaint);
+//                canvas.drawCircle(13 * value / 14 + wOffset, 2 * value / 3 + hOffset, 10, mPointPaint);
+//                canvas.drawCircle(27 * value / 28 + wOffset, 2 * value / 5 + hOffset, 10, mPointPaint);
+//
+//                canvas.drawCircle(value + wOffset , value / 15 + hOffset, 10, mPointPaint);
+//                canvas.drawCircle(9 * value / 14 + wOffset , hOffset, 10, mPointPaint);
+//                canvas.drawCircle(value / 2 + wOffset , value / 5 + hOffset, 10, mPointPaint);
+
+                break;
         }
     }
 
