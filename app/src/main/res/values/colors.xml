@@ -21,6 +21,7 @@
         <item>@color/blue</item>
         <item>@color/violet</item>
         <item>@color/magenta</item>
+        <item>@color/coffee</item>
         <item>@color/white</item>
         <item>@color/black</item>
     </array>
@@ -36,6 +37,7 @@
     <color name="blue">#0000FF</color>
     <color name="violet">#7F00FF</color>
     <color name="magenta">#FF00FF</color>
+    <color name="coffee">#8e2710</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 </resources>

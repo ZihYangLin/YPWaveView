@@ -14,8 +14,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
+import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 /**
@@ -28,11 +30,10 @@ public class YPWaveView extends View {
 
     /*位移Animator*/
     private float shiftX1 = 0;
-    private int strong = 50;
     private float shiftOffset = -0.25f;
     private int waveOffset = 25;
     private int speed = 25;
-    private HandlerThread thread = new HandlerThread("YPWaveView" + hashCode());
+    private HandlerThread thread = new HandlerThread("YPWaveView_" + hashCode());
     private Handler animHandler, uiHandler;
 
     /*畫筆*/
@@ -42,10 +43,11 @@ public class YPWaveView extends View {
     /*初始常數*/
     private static final int DEFAULT_PROGRESS = 405;
     private static final int DEFAULT_MAX = 1000;
+    private static final int DEFAULT_STRONG = 50;
     public static final int DEFAULT_BEHIND_WAVE_COLOR = Color.parseColor("#443030d5");
     public static final int DEFAULT_FRONT_WAVE_COLOR = Color.parseColor("#FF3030d5");
     public static final int DEFAULT_BORDER_COLOR = Color.parseColor("#000000");
-    private static final int DEFAULT_BORDER_WIDTH = 5;
+    private static final float DEFAULT_BORDER_WIDTH = 5f;
     public static final int DEFAULT_TEXT_COLOR = Color.parseColor("#000000");
     private static final boolean DEFAULT_ENABLE_ANIMATION = false;
 
@@ -55,9 +57,10 @@ public class YPWaveView extends View {
     private int mFrontWaveColor = DEFAULT_FRONT_WAVE_COLOR; //前面水波顏色
     private int mBehindWaveColor = DEFAULT_BEHIND_WAVE_COLOR; //後面水波顏色
     private int mBorderColor = DEFAULT_BORDER_COLOR; //邊線顏色
-    private int mBorderWidth = DEFAULT_BORDER_WIDTH; //邊線寬度
+    private float mBorderWidth = DEFAULT_BORDER_WIDTH; //邊線寬度
     private int mTextColor = DEFAULT_TEXT_COLOR; //字體顏色
     private boolean isAnimation = DEFAULT_ENABLE_ANIMATION;
+    private int mStrong = DEFAULT_STRONG; //波峰
     private int value = 0; //寬或高的最小值
 
 
@@ -81,17 +84,20 @@ public class YPWaveView extends View {
         mTextColor = attributes.getColor(R.styleable.YPWaveView_textColor, DEFAULT_TEXT_COLOR);
         mProgress = attributes.getInt(R.styleable.YPWaveView_progress, DEFAULT_PROGRESS);
         mMax = attributes.getInt(R.styleable.YPWaveView_max, DEFAULT_MAX);
-        mBorderWidth = attributes.getInt(R.styleable.YPWaveView_borderWidth2, DEFAULT_BORDER_WIDTH);
+        mBorderWidth = attributes.getDimension(R.styleable.YPWaveView_borderWidthSize, DEFAULT_BORDER_WIDTH);
+        mStrong = attributes.getInt(R.styleable.YPWaveView_strong, DEFAULT_STRONG);
         isAnimation = attributes.getBoolean(R.styleable.YPWaveView_animatorEnable, DEFAULT_ENABLE_ANIMATION);
 
         /*設定抗鋸齒 & 設定為"線"*/
         mBorderPaint.setAntiAlias(true);
         mBorderPaint.setStyle(Paint.Style.STROKE);
+        mBorderPaint.setStrokeWidth(mBorderWidth);
+        mBorderPaint.setColor(mBorderColor);
 
         /*開啟動畫執行緒*/
         thread.start();
         animHandler = new Handler(thread.getLooper());
-        uiHandler = new UIHandler();
+        uiHandler = new UIHandler(new WeakReference<View>(this));
 
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
@@ -99,10 +105,12 @@ public class YPWaveView extends View {
 
     /**
      * 設定水位
+     * 0-MAX
      */
     public void setProgress(int progress) {
         if (progress <= mMax) {
             mProgress = progress;
+            createShader();
             Message message = Message.obtain(uiHandler);
             message.sendToTarget();
         }
@@ -136,6 +144,7 @@ public class YPWaveView extends View {
         if (mMax != max) {
             if (max >= mProgress) {
                 mMax = max;
+                createShader();
                 Message message = Message.obtain(uiHandler);
                 message.sendToTarget();
             }
@@ -148,6 +157,7 @@ public class YPWaveView extends View {
     public void setBorderColor(int color) {
         mBorderColor = color;
         mBorderPaint.setColor(mBorderColor);
+        createShader();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
     }
@@ -157,6 +167,7 @@ public class YPWaveView extends View {
      */
     public void setFrontWaveColor(int color) {
         mFrontWaveColor = color;
+        createShader();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
     }
@@ -166,6 +177,7 @@ public class YPWaveView extends View {
      */
     public void setBehindWaveColor(int color) {
         mBehindWaveColor = color;
+        createShader();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
     }
@@ -175,6 +187,7 @@ public class YPWaveView extends View {
      */
     public void setTextColor(int color) {
         mTextColor = color;
+        createShader();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
     }
@@ -182,9 +195,10 @@ public class YPWaveView extends View {
     /**
      * 設定邊線寬度
      */
-    public void setBorderWidth(int width) {
+    public void setBorderWidth(float width) {
         mBorderWidth = width;
         mBorderPaint.setStrokeWidth(mBorderWidth);
+        createShader();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
     }
@@ -192,31 +206,47 @@ public class YPWaveView extends View {
 
     /**
      * 設定動畫速度
+     * Fast -> Slow
+     * 0.......∞
      */
     public void setAnimationSpeed(int speed) {
         this.speed = speed;
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
     /**
-     * 設定水波偏移
+     * 設定前後水波每次刷新偏移多少
+     * 0-100
      */
     public void setWaveShiftOffset(float offset) {
-        this.shiftOffset = offset;
+        this.shiftOffset = (offset - 50f) / 50f;
+        createShader();
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
 
     /**
-     * 設定水波位移量
+     * 設定前後水波相差位移
+     * 1-100
      */
     public void setWaveOffset(int offset) {
         this.waveOffset = offset;
+        createShader();
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
     /**
      * 設定波峰
+     * 0-100
      */
     public void setWaveStrong(int strong) {
-        this.strong = strong;
+        this.mStrong = strong;
+        createShader();
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
     @Override
@@ -257,8 +287,10 @@ public class YPWaveView extends View {
         int x2 = getWidth() + 1;//寬度
         int y2 = getHeight() + 1;//高度
         shiftX1 += shiftOffset; //位移量
-        float shiftX2 = shiftX1 + ((value * waveOffset / 100) / 4); //前後波相差 1/4波
-        int waveLevel = strong * (value / 20) / 100;  // value / 20
+        float zzz = (((float) value * ((waveOffset - 50) / 100f)) / ((float) value / 6.25f));
+        float shiftX2 = shiftX1 + zzz; //前後波相差
+        Log.i("Ocean", "shift1:" + shiftX1 + " shift2:" + shiftX2 + " value:" + value + " offset:" + waveOffset + " zzz:" + zzz);
+        int waveLevel = mStrong * (value / 20) / 100;  // value / 20
         /*建立後波 (先後再前覆蓋)*/
         wavePaint.setColor(mBehindWaveColor);
         for (int x1 = 0; x1 < x2; x1++) {
@@ -306,15 +338,20 @@ public class YPWaveView extends View {
         }
     }
 
-    class UIHandler extends Handler {
-        UIHandler() {
+    private static class UIHandler extends Handler {
+        private final View mView;
+
+        UIHandler(WeakReference<View> view) {
             super(Looper.getMainLooper());
+            mView = view.get();
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            invalidate();
+            if (mView != null) {
+                mView.invalidate();
+            }
         }
     }
 }

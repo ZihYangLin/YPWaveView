@@ -14,12 +14,20 @@
 
         <com.yangp.ypwaveview.YPWaveView
             android:id="@+id/waveView2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin="16dp"
-            app:animatorEnable="true" />
+            android:layout_margin="16dp" />
     </FrameLayout>
+
+    <Switch
+        android:id="@+id/switch_animation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="動畫" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,6 +52,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:text="後波顏色：" />
 
@@ -79,6 +89,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:text="百分比顏色：" />
 
@@ -95,7 +107,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
         <TextView
@@ -109,7 +121,8 @@
             android:layout_width="0dp"
             android:layout_height="20dp"
             android:layout_weight="5"
-            android:max="10" />
+            android:max="20"
+            android:progress="7" />
     </LinearLayout>
 
     <LinearLayout
@@ -118,7 +131,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
         <TextView
@@ -142,7 +155,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
         <TextView
@@ -163,10 +176,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
         <TextView
@@ -180,8 +193,8 @@
             android:layout_width="0dp"
             android:layout_height="20dp"
             android:layout_weight="5"
-            android:progress="25"
-            android:max="100" />
+            android:max="100"
+            android:progress="25" />
     </LinearLayout>
 
     <LinearLayout
@@ -190,7 +203,7 @@
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
         <TextView
@@ -204,13 +217,13 @@
             android:layout_width="0dp"
             android:layout_height="20dp"
             android:layout_weight="5"
-            android:progress="50"
-            android:max="100" />
+            android:max="100"
+            android:progress="50" />
     </LinearLayout>
 
     <Button
-        android:onClick="onRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="start"/>
+        android:onClick="onRefresh"
+        android:text="重填" />
 </LinearLayout>

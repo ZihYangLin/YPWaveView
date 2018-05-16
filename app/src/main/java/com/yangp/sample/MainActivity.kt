@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setBorderWidth(progress + 1)
+                waveView2.setBorderWidth(progress + 1f)
             }
         })
 
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setWaveShiftOffset((progress - 50).toFloat() / 50f)
+                waveView2.setWaveShiftOffset(progress.toFloat())
             }
         })
 
@@ -118,6 +118,13 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 waveView2.setWaveStrong(progress)
             }
         })
+        switch_animation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                waveView2.startAnimation()
+            } else {
+                waveView2.stopAnimation()
+            }
+        }
 
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
