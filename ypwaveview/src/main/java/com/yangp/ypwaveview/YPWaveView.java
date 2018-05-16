@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -289,7 +288,6 @@ public class YPWaveView extends View {
         shiftX1 += shiftOffset; //位移量
         float zzz = (((float) value * ((waveOffset - 50) / 100f)) / ((float) value / 6.25f));
         float shiftX2 = shiftX1 + zzz; //前後波相差
-        Log.i("Ocean", "shift1:" + shiftX1 + " shift2:" + shiftX2 + " value:" + value + " offset:" + waveOffset + " zzz:" + zzz);
         int waveLevel = mStrong * (value / 20) / 100;  // value / 20
         /*建立後波 (先後再前覆蓋)*/
         wavePaint.setColor(mBehindWaveColor);
