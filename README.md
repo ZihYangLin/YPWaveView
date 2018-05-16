@@ -1,6 +1,6 @@
 # YPWaveView
 
-A ProgressBar for View Like Wave on Android.
+A wave-like progressbar on Android which has three shapes, circle, square and heart.
 
 Sample
 ======
@@ -21,7 +21,7 @@ Attributes
 | borderWidthSize | Dimension | Defines the width of the border.   |
 | strong | Integer | Defines the strong of the wave crest, between 0 and 100.|
 | animatorEnable | boolean | Control the start of the animation. |
-| shapeType | enum | Control the shape of the YPWaveView. (YPWaveView.Shape)|
+| shapeType | enum | Set the shape of the YPWaveView. (circle, square and heart)|
 
 Methods
 ===
@@ -31,7 +31,8 @@ Methods
 | startAnimation() | void | Start the animation. |
 | stopAnimation() | void | Stop the animation. |
 | setWaveVector(float offset) | void | Set the vector of the wave, between 0 and 100. |
-| setWaveOffset(int offset) | void | Set the offset of the front and behide waves, between 0 and 100.
+| setWaveOffset(int offset) | void | Set the offset of the front and behide waves, between 0 and 100.|
+| setShape(Shape shape) | void | Set the shape of the YPWaveView.(YPWaveView.Shape)|
 
 <img src="webps/device-2018-05-16-161620.webp" width="246">
 
