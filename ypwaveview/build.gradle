@@ -6,12 +6,11 @@ tasks.withType(Javadoc) {
     options.addStringOption('charSet', 'UTF-8')
 }
 android {
-    compileSdkVersion 9
+    compileSdkVersion 16
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 9
+        minSdkVersion 16
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.2"
     }
 
     buildTypes {
@@ -34,7 +33,7 @@ group = "com.yangping"
 //发布到JCenter上的项目名字，必须填写
 def libName = "YPWaveView"
 // 版本号，下次更新是只需要更改版本号即可
-version = "1.0.1"
+version = "1.0.2"
 /**  上面配置后上传至jcenter后的编译路径是这样的： compile       'com.fighter.maven:mylibs:1.0.0'  **/
 
 
