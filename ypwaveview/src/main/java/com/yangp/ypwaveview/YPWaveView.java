@@ -147,6 +147,7 @@ public class YPWaveView extends View {
             animHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    shiftX1 += waveVector; //位移量
                     createShader();
                     Message message = Message.obtain(uiHandler);
                     message.sendToTarget();
@@ -406,7 +407,6 @@ public class YPWaveView extends View {
         float level = ((((float) (mMax - mProgress)) / (float) mMax) * value) + ((getHeight() / 2) - (value / 2)); //水位的高度
         int x2 = getWidth() + 1;//寬度
         int y2 = getHeight() + 1;//高度
-        shiftX1 += waveVector; //位移量
         float zzz = (((float) value * ((waveOffset - 50) / 100f)) / ((float) value / 6.25f));
         float shiftX2 = shiftX1 + zzz; //前後波相差
         int waveLevel = mStrong * (value / 20) / 100;  // value / 20

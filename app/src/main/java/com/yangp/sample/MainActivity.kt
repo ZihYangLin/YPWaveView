@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setStarSpikes(progress)
+                waveView2.setStarSpikes(progress + 3)
             }
         })
         switch_animation.setOnCheckedChangeListener { _, isChecked ->
