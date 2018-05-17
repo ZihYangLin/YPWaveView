@@ -28,7 +28,7 @@ import java.util.Locale;
 public class YPWaveView extends View {
     /*類型常數*/
     public enum Shape {
-        CIRCLE(1), SQUARE(2), HEART(3);
+        CIRCLE(1), SQUARE(2), HEART(3), STAR(4);
         int value;
 
         Shape(int value) {
@@ -56,6 +56,7 @@ public class YPWaveView extends View {
     private Paint mBorderPaint = new Paint(); //邊線的Paint
     private Paint mViewPaint = new Paint(); //水位的Paint
     private Path pathHeart; //愛心路徑
+    private Path pathStar; //星星路徑
 
     /*初始常數*/
     private static final int DEFAULT_PROGRESS = 405;
@@ -293,11 +294,42 @@ public class YPWaveView extends View {
         /*右上升線*/
         pathHeart.cubicTo(value + wOffset, value / 15 + hOffset, 9 * value / 14 + wOffset, hOffset, value / 2 + wOffset, value / 5 + hOffset);
 
+        /*===星星路徑===*/
+        pathStar = drawStart(value / 2 + wOffset, value / 2 + hOffset + (int) mBorderWidth, 5, value / 2 - (int) mBorderWidth, value / 4);
 
         createShader();
         if (isAnimation) {
             startAnimation();
         }
+    }
+
+
+    /**
+     * 畫星星
+     *
+     * @param cx          X
+     * @param cy          Y
+     * @param spikes      星星的角數
+     * @param outerRadius 外圈半徑
+     * @param innerRadius 內圈半徑
+     * @return 路徑
+     */
+    private Path drawStart(int cx, int cy, int spikes, int outerRadius, int innerRadius) {
+        Path path = new Path();
+        double rot = Math.PI / 2d * 3d;
+        double step = Math.PI / spikes;
+
+        path.moveTo(cx, cy - outerRadius);
+        for (int i = 0; i < spikes; i++) {
+            path.lineTo(cx + (float) Math.cos(rot) * outerRadius, cy + (float) Math.sin(rot) * outerRadius);
+            rot += step;
+
+            path.lineTo(cx + (float) Math.cos(rot) * innerRadius, cy + (float) Math.sin(rot) * innerRadius);
+            rot += step;
+        }
+        path.lineTo(cx, cy - outerRadius);
+        path.close();
+        return path;
     }
 
 
@@ -348,15 +380,6 @@ public class YPWaveView extends View {
             canvas.drawLine((float) x1, y1, (float) x1, y2, wavePaint);
         }
 
-        /*建立百分比文字*/
-        float percent = (mProgress * 100) / (float) mMax;
-        String text = String.format(Locale.TAIWAN, "%.1f", percent) + "%";
-        TextPaint textPaint = new TextPaint();
-        textPaint.setColor(mTextColor);
-        textPaint.setTextSize((value / 2f) / 2);
-        textPaint.setAntiAlias(true);
-        float textHeight = textPaint.descent() + textPaint.ascent();
-        canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, (getHeight() - textHeight) / 2.0f, textPaint);
         mViewPaint.setShader(new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.CLAMP));
     }
 
@@ -409,7 +432,29 @@ public class YPWaveView extends View {
                     canvas.drawPath(pathHeart, mBorderPaint);
                 }
                 break;
+            case STAR:
+                canvas.drawPath(pathStar, mViewPaint);
+                /*畫邊線*/
+                if (mBorderWidth > 0) {
+                    canvas.drawPath(pathStar, mBorderPaint);
+                }
+                break;
         }
+
+         /*建立百分比文字*/
+        float percent = (mProgress * 100) / (float) mMax;
+        String text = String.format(Locale.TAIWAN, "%.1f", percent) + "%";
+        TextPaint textPaint = new TextPaint();
+        textPaint.setColor(mTextColor);
+        if (mShape == Shape.STAR) {
+            textPaint.setTextSize((value / 2f) / 3);
+        } else {
+            textPaint.setTextSize((value / 2f) / 2);
+        }
+
+        textPaint.setAntiAlias(true);
+        float textHeight = textPaint.descent() + textPaint.ascent();
+        canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, (getHeight() - textHeight) / 2.0f, textPaint);
     }
 
     private static class UIHandler extends Handler {

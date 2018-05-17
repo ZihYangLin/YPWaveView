@@ -137,6 +137,9 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 R.id.radioHeart -> {
                     waveView2.setShape(YPWaveView.Shape.HEART)
                 }
+                R.id.radioStar -> {
+                    waveView2.setShape(YPWaveView.Shape.STAR)
+                }
             }
         }
 

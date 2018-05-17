@@ -15,4 +15,5 @@
     <string name="circle">CIRCLE</string>
     <string name="animation">Animation</string>
     <string name="heart">HEART</string>
+    <string name="star">STAR</string>
 </resources>
