@@ -1,11 +1,11 @@
 # YPWaveView
 
-A wave-like progressbar on Android which has three shapes, circle, square and heart.
+A wave-like progressbar on Android which has four shapes, circle, square, heart and star.
 
 Sample
 ======
 
-<img src="webps/ypwaveview_sample.gif" width="246">
+<img src="webps/ypwaveview_sample2.gif" width="246"> <img src="webps/ypwaveview_sample3.gif" width="246">
 
 
 Attributes
@@ -22,6 +22,7 @@ Attributes
 | strong | Integer | Defines the strong of the wave crest, between 0 and 100.|
 | animatorEnable | boolean | Control the start of the animation. |
 | shapeType | enum | Set the shape of the YPWaveView. (circle, square and heart)|
+| textHidden | boolean | Set whether the percent text is hidden|
 
 Methods
 ===
@@ -33,6 +34,8 @@ Methods
 | setWaveVector(float offset) | void | Set the vector of the wave, between 0 and 100. |
 | setWaveOffset(int offset) | void | Set the offset of the front and behide waves, between 0 and 100.|
 | setShape(Shape shape) | void | Set the shape of the YPWaveView.(YPWaveView.Shape)|
+| setHideText(boolean hidden) | void | Set whether the percent text is hidden|
+| setStarSpikes(int count) | void | Set the count of spikes.|
 
 
 XML
@@ -53,6 +56,7 @@ XML
         app:progress="757"
         app:shapeType="heart"
         app:strong="100"
+        app:textHidden="false"
         app:textColor="#ffffff" />
 ```
 
