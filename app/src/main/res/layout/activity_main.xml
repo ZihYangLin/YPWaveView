@@ -20,14 +20,26 @@
             android:layout_margin="16dp" />
     </FrameLayout>
 
-    <CheckBox
-        android:id="@+id/switch_animation"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:text="@string/animation" />
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/switch_animation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/animation" />
+
+        <CheckBox
+            android:id="@+id/switch_hidden_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hide_text" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,6 +78,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/heart" />
+
+            <RadioButton
+                android:id="@+id/radioStar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/star" />
         </RadioGroup>
     </LinearLayout>
 
@@ -240,7 +259,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="4dp"
@@ -259,6 +278,30 @@
             android:layout_weight="5"
             android:max="100"
             android:progress="50" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/spike_count" />
+
+        <SeekBar
+            android:id="@+id/seekbar_spikes"
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_weight="5"
+            android:max="12"
+            android:progress="2" />
     </LinearLayout>
 
     <Button

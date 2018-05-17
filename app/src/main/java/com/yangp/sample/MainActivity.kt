@@ -118,12 +118,27 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 waveView2.setWaveStrong(progress)
             }
         })
+        seekbar_spikes.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setStarSpikes(progress + 3)
+            }
+        })
         switch_animation.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 waveView2.startAnimation()
             } else {
                 waveView2.stopAnimation()
             }
+        }
+
+        switch_hidden_text.setOnCheckedChangeListener { _, isChecked ->
+            waveView2.setHideText(isChecked)
         }
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -136,6 +151,9 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 }
                 R.id.radioHeart -> {
                     waveView2.setShape(YPWaveView.Shape.HEART)
+                }
+                R.id.radioStar -> {
+                    waveView2.setShape(YPWaveView.Shape.STAR)
                 }
             }
         }
