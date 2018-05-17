@@ -34,10 +34,12 @@ Methods
 | setWaveOffset(int offset) | void | Set the offset of the front and behide waves, between 0 and 100.|
 | setShape(Shape shape) | void | Set the shape of the YPWaveView.(YPWaveView.Shape)|
 
-<img src="webps/device-2018-05-16-161620.webp" width="246">
 
 XML
 ===
+
+<img src="webps/device-2018-05-16-161620.webp" width="246">
+
 ```
  <com.yangp.ypwaveview.YPWaveView
         android:layout_width="match_parent"
@@ -63,7 +65,7 @@ Download
   <version>1.0.1</version>
 </dependency>
 ```
-or Gradle:
+or Gradle ( jcenter ):
 ```groovy
 implementation 'com.yangping:ypwaveview:1.0.1'
 ```
