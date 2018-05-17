@@ -68,6 +68,8 @@ public class YPWaveView extends View {
     private static final float DEFAULT_BORDER_WIDTH = 5f;
     public static final int DEFAULT_TEXT_COLOR = Color.parseColor("#000000");
     private static final boolean DEFAULT_ENABLE_ANIMATION = false;
+    private static final boolean DEFAULT_HIDE_TEXT = false;
+    private static final int DEFAULT_SPIKE_COUNT = 5;
 
     /*參數值*/
     private int mProgress = DEFAULT_PROGRESS; //水位
@@ -78,7 +80,9 @@ public class YPWaveView extends View {
     private float mBorderWidth = DEFAULT_BORDER_WIDTH; //邊線寬度
     private int mTextColor = DEFAULT_TEXT_COLOR; //字體顏色
     private boolean isAnimation = DEFAULT_ENABLE_ANIMATION;
+    private boolean isHideText = DEFAULT_HIDE_TEXT;
     private int mStrong = DEFAULT_STRONG; //波峰
+    private int mSpikes = DEFAULT_SPIKE_COUNT;
     private Shape mShape = Shape.CIRCLE;
     private int value = 0; //寬或高的最小值
 
@@ -107,6 +111,7 @@ public class YPWaveView extends View {
         mStrong = attributes.getInt(R.styleable.YPWaveView_strong, DEFAULT_STRONG);
         mShape = Shape.fromValue(attributes.getInt(R.styleable.YPWaveView_shapeType, 1));
         isAnimation = attributes.getBoolean(R.styleable.YPWaveView_animatorEnable, DEFAULT_ENABLE_ANIMATION);
+        isHideText = attributes.getBoolean(R.styleable.YPWaveView_textHidden, DEFAULT_HIDE_TEXT);
 
         /*設定抗鋸齒 & 設定為"線"*/
         mBorderPaint.setAntiAlias(true);
@@ -227,9 +232,12 @@ public class YPWaveView extends View {
     /**
      * 設定動畫速度
      * Fast -> Slow
-     * 0.......∞
+     * 0...∞
      */
     public void setAnimationSpeed(int speed) {
+        if (speed < 0) {
+            throw new IllegalArgumentException("The speed must be greater than 0.");
+        }
         this.speed = speed;
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
@@ -240,10 +248,46 @@ public class YPWaveView extends View {
      * 0-100
      */
     public void setWaveVector(float offset) {
+        if (offset < 0 || offset > 100) {
+            throw new IllegalArgumentException("The vector of wave must be between 0 and 100.");
+        }
         this.waveVector = (offset - 50f) / 50f;
         createShader();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
+    }
+
+    /**
+     * 設定字體是否隱藏
+     *
+     * @param hidden 隱藏
+     */
+    public void setHideText(boolean hidden) {
+        this.isHideText = hidden;
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
+    }
+
+    /**
+     * 設定星星的角數
+     * 3...∞
+     *
+     * @param count 角數
+     */
+    public void setStarSpikes(int count) {
+        if (count < 3) {
+            throw new IllegalArgumentException("The number of spikes must be greater than 3.");
+        }
+        this.mSpikes = count;
+        if (value != 0) {
+             /*===星星路徑===*/
+            int wOffset = (getWidth() - value) / 2;
+            int hOffset = (getHeight() - value) / 2;
+            pathStar = drawStart(value / 2 + wOffset, value / 2 + hOffset + (int) mBorderWidth, mSpikes, value / 2 - (int) mBorderWidth, value / 4);
+            createShader();
+            Message message = Message.obtain(uiHandler);
+            message.sendToTarget();
+        }
     }
 
 
@@ -295,7 +339,7 @@ public class YPWaveView extends View {
         pathHeart.cubicTo(value + wOffset, value / 15 + hOffset, 9 * value / 14 + wOffset, hOffset, value / 2 + wOffset, value / 5 + hOffset);
 
         /*===星星路徑===*/
-        pathStar = drawStart(value / 2 + wOffset, value / 2 + hOffset + (int) mBorderWidth, 5, value / 2 - (int) mBorderWidth, value / 4);
+        pathStar = drawStart(value / 2 + wOffset, value / 2 + hOffset + (int) mBorderWidth, mSpikes, value / 2 - (int) mBorderWidth, value / 4);
 
         createShader();
         if (isAnimation) {
@@ -440,21 +484,23 @@ public class YPWaveView extends View {
                 }
                 break;
         }
+        if (!isHideText) {
+              /*建立百分比文字*/
+            float percent = (mProgress * 100) / (float) mMax;
+            String text = String.format(Locale.TAIWAN, "%.1f", percent) + "%";
+            TextPaint textPaint = new TextPaint();
+            textPaint.setColor(mTextColor);
+            if (mShape == Shape.STAR) {
+                textPaint.setTextSize((value / 2f) / 3);
+            } else {
+                textPaint.setTextSize((value / 2f) / 2);
+            }
 
-         /*建立百分比文字*/
-        float percent = (mProgress * 100) / (float) mMax;
-        String text = String.format(Locale.TAIWAN, "%.1f", percent) + "%";
-        TextPaint textPaint = new TextPaint();
-        textPaint.setColor(mTextColor);
-        if (mShape == Shape.STAR) {
-            textPaint.setTextSize((value / 2f) / 3);
-        } else {
-            textPaint.setTextSize((value / 2f) / 2);
+            textPaint.setAntiAlias(true);
+            float textHeight = textPaint.descent() + textPaint.ascent();
+            canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, (getHeight() - textHeight) / 2.0f, textPaint);
+
         }
-
-        textPaint.setAntiAlias(true);
-        float textHeight = textPaint.descent() + textPaint.ascent();
-        canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, (getHeight() - textHeight) / 2.0f, textPaint);
     }
 
     private static class UIHandler extends Handler {

@@ -16,4 +16,6 @@
     <string name="animation">Animation</string>
     <string name="heart">HEART</string>
     <string name="star">STAR</string>
+    <string name="hide_text">Hide Percent Text</string>
+    <string name="spike_count">spikes(STAR)</string>
 </resources>
