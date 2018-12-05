@@ -62,7 +62,7 @@ XML
         app:strong="100"
         app:textHidden="false"
         app:shapePadding="30dp"
-        app:textColor="#ffffff" />
+        app:textColor="#15DF89" />
 ```
 
 Download
