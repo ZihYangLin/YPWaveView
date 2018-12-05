@@ -273,8 +273,8 @@ public class YPWaveView extends View {
     /**
      * 設定內縮
      */
-    public void setShapePadding(int mPadding) {
-        this.mShapePadding = mPadding;
+    public void setShapePadding(float padding) {
+        this.mShapePadding = padding;
         resetShapes();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
