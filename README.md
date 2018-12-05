@@ -23,6 +23,7 @@ Attributes
 | animatorEnable | boolean | Control the start of the animation. |
 | shapeType | enum | Set the shape of the YPWaveView. (circle, square and heart)|
 | textHidden | boolean | Set whether the percent text is hidden|
+| shapePadding | Dimension | Defines the value of the shape padding.|
 
 Methods
 ===
@@ -36,6 +37,9 @@ Methods
 | setShape(Shape shape) | void | Set the shape of the YPWaveView.(YPWaveView.Shape)|
 | setHideText(boolean hidden) | void | Set whether the percent text is hidden|
 | setStarSpikes(int count) | void | Set the count of spikes.|
+| setBorderWidth(float width) | void | Set the width of the border.|
+| setShapePadding(float padding) | void | Set the value of the shape padding.|
+| setWaveStrong(int strong) | void | Set the strong of the wave crest, between 0 and 100.|
 
 
 XML
