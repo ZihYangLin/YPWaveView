@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.Shader;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -57,8 +58,12 @@ public class YPWaveView extends View {
     private Paint mViewPaint = new Paint(); //水位的Paint
     private Path pathHeart; //愛心路徑
     private Path pathStar; //星星路徑
+    private Path pathCircle;
+    private Path pathSquare;
 
     /*初始常數*/
+    private static final int VIEW_WIDTH = 500;
+    private static final int VIEW_HEIGHT = 500;
     private static final int DEFAULT_PROGRESS = 405;
     private static final int DEFAULT_MAX = 1000;
     private static final int DEFAULT_STRONG = 50;
@@ -86,7 +91,7 @@ public class YPWaveView extends View {
     private Shape mShape = Shape.CIRCLE;
     private int value = 0; //寬或高的最小值
     private OnWaveStuffListener mListener;
-
+    private Point screenSize = new Point(0, 0);
 
     public YPWaveView(Context context) {
         this(context, null);
@@ -125,6 +130,7 @@ public class YPWaveView extends View {
         animHandler = new Handler(thread.getLooper());
         uiHandler = new UIHandler(new WeakReference<View>(this));
 
+        screenSize = new Point(getWidth(), getHeight());
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
     }
@@ -152,11 +158,14 @@ public class YPWaveView extends View {
     public void startAnimation() {
         isAnimation = true;
         if (getWidth() > 0 && getHeight() > 0) {
+            animHandler.removeCallbacksAndMessages(null);
             animHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     shiftX1 += waveVector; //位移量
+                    long time = System.currentTimeMillis();
                     createShader();
+                    System.out.println("time=>" + (System.currentTimeMillis() - time));
                     Message message = Message.obtain(uiHandler);
                     message.sendToTarget();
                     if (isAnimation) {
@@ -244,7 +253,7 @@ public class YPWaveView extends View {
     public void setBorderWidth(float width) {
         mBorderWidth = width;
         mBorderPaint.setStrokeWidth(mBorderWidth);
-        createShader();
+        resetShapes();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
     }
@@ -302,12 +311,7 @@ public class YPWaveView extends View {
         this.mSpikes = count;
         if (value != 0) {
             /*===星星路徑===*/
-            int wOffset = (getWidth() - value) / 2;
-            int hOffset = (getHeight() - value) / 2;
-            pathStar = drawStart(value / 2 + wOffset, value / 2 + hOffset + (int) mBorderWidth, mSpikes, value / 2 - (int) mBorderWidth, value / 4);
-            createShader();
-            Message message = Message.obtain(uiHandler);
-            message.sendToTarget();
+            resetShapes();
         }
     }
 
@@ -343,13 +347,21 @@ public class YPWaveView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        value = Math.min(w, h);
-        int wOffset = (w - value) / 2;
-        int hOffset = (h - value) / 2;
+        screenSize = new Point(w, h);
+        resetShapes();
+        if (isAnimation) {
+            startAnimation();
+        }
+    }
+
+    private void resetShapes() {
+        value = Math.min(screenSize.x, screenSize.y);
+        int wOffset = (screenSize.x - value) / 2;
+        int hOffset = (screenSize.y - value) / 2;
         /*===愛心路徑===*/
         pathHeart = new Path();
         /*起此點*/
-        pathHeart.moveTo(value / 2 + wOffset, value / 5 + hOffset);
+        pathHeart.moveTo(value / 2 + wOffset + (mBorderWidth / 4), value / 5 + hOffset);
         /*左上升線*/
         pathHeart.cubicTo(5 * value / 14 + wOffset, hOffset, wOffset, value / 15 + hOffset, value / 28 + wOffset, 2 * value / 5 + hOffset);
         /*左下降線*/
@@ -357,15 +369,27 @@ public class YPWaveView extends View {
         /*右下降線*/
         pathHeart.cubicTo(4 * value / 7 + wOffset, 5 * value / 6 + hOffset, 13 * value / 14 + wOffset, 2 * value / 3 + hOffset, 27 * value / 28 + wOffset, 2 * value / 5 + hOffset);
         /*右上升線*/
-        pathHeart.cubicTo(value + wOffset, value / 15 + hOffset, 9 * value / 14 + wOffset, hOffset, value / 2 + wOffset, value / 5 + hOffset);
+        pathHeart.cubicTo(value + wOffset, value / 15 + hOffset, 9 * value / 14 + wOffset, hOffset, value / 2 + wOffset - (mBorderWidth / 4), value / 5 + hOffset);
+
 
         /*===星星路徑===*/
         pathStar = drawStart(value / 2 + wOffset, value / 2 + hOffset + (int) mBorderWidth, mSpikes, value / 2 - (int) mBorderWidth, value / 4);
 
+        /*===方形路徑===*/
+        pathSquare = new Path();
+        pathSquare.moveTo(wOffset, hOffset + (mBorderWidth / 2));
+        pathSquare.lineTo(wOffset, value + hOffset - mBorderWidth);
+        pathSquare.lineTo(value + wOffset, value + hOffset - mBorderWidth);
+        pathSquare.lineTo(value + wOffset, hOffset + mBorderWidth);
+        pathSquare.lineTo(wOffset, hOffset + mBorderWidth);
+
+        /*===圓形路徑===*/
+        pathCircle = new Path();
+        pathCircle.addCircle((value / 2) + wOffset, (value / 2) + hOffset, (value / 2) - mBorderWidth, Path.Direction.CCW);
+
         createShader();
-        if (isAnimation) {
-            startAnimation();
-        }
+        Message message = Message.obtain(uiHandler);
+        message.sendToTarget();
     }
 
 
@@ -416,7 +440,7 @@ public class YPWaveView extends View {
         double w = (2.0f * Math.PI) / value;
 
         /*建立畫布*/
-        Bitmap bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(VIEW_WIDTH, VIEW_HEIGHT, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
         /*建立著色器*/
@@ -424,9 +448,9 @@ public class YPWaveView extends View {
         wavePaint.setStrokeWidth(2f);
         wavePaint.setAntiAlias(true);
 
-        float level = ((((float) (mMax - mProgress)) / (float) mMax) * value) + ((getHeight() / 2) - (value / 2)); //水位的高度
-        int x2 = getWidth() + 1;//寬度
-        int y2 = getHeight() + 1;//高度
+        float level = ((((float) (mMax - mProgress)) / (float) mMax) * value) + ((VIEW_HEIGHT / 2) - (value / 2)); //水位的高度
+        int x2 = VIEW_WIDTH + 1;//寬度
+        int y2 = VIEW_HEIGHT + 1;//高度
         float zzz = (((float) value * ((waveOffset - 50) / 100f)) / ((float) value / 6.25f));
         float shiftX2 = shiftX1 + zzz; //前後波相差
         int waveLevel = mStrong * (value / 20) / 100;  // value / 20
@@ -461,49 +485,34 @@ public class YPWaveView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         float radius = (value / 2f) - mBorderWidth;
-        float cx = getWidth() / 2f;
-        float cy = getHeight() / 2f;
+        float cx = VIEW_WIDTH / 2f;
+        float cy = VIEW_HEIGHT / 2f;
 
+        Path path = null;
         switch (mShape) {
             case CIRCLE:
-                canvas.drawCircle(cx, cy, radius, mViewPaint);
-                /*畫邊線*/
-                if (mBorderWidth > 0) {
-                    canvas.drawCircle(cx, cy, radius, mBorderPaint);
-                }
+                path = pathCircle;
                 break;
             case SQUARE:
-                canvas.drawRect(
-                        cx - radius
-                        , cy - radius
-                        , cx + radius
-                        , cy + radius
-                        , mViewPaint);
-                /*畫邊線*/
-                if (mBorderWidth > 0) {
-                    canvas.drawRect(
-                            cx - radius
-                            , cy - radius
-                            , cx + radius
-                            , cy + radius
-                            , mBorderPaint);
-                }
+                path = pathSquare;
                 break;
             case HEART:
-                canvas.drawPath(pathHeart, mViewPaint);
-                /*畫邊線*/
-                if (mBorderWidth > 0) {
-                    canvas.drawPath(pathHeart, mBorderPaint);
-                }
+                path = pathHeart;
                 break;
             case STAR:
-                canvas.drawPath(pathStar, mViewPaint);
-                /*畫邊線*/
-                if (mBorderWidth > 0) {
-                    canvas.drawPath(pathStar, mBorderPaint);
-                }
+                path = pathStar;
                 break;
         }
+
+        if (path != null) {
+            canvas.drawPath(path, mViewPaint);
+            /*畫邊線*/
+            if (mBorderWidth > 0) {
+                canvas.drawPath(path, mBorderPaint);
+            }
+        }
+
+
         if (!isHideText) {
             /*建立百分比文字*/
             float percent = (mProgress * 100) / (float) mMax;
@@ -518,7 +527,7 @@ public class YPWaveView extends View {
 
             textPaint.setAntiAlias(true);
             float textHeight = textPaint.descent() + textPaint.ascent();
-            canvas.drawText(text, (getWidth() - textPaint.measureText(text)) / 2.0f, (getHeight() - textHeight) / 2.0f, textPaint);
+            canvas.drawText(text, (screenSize.x - textPaint.measureText(text)) / 2.0f, (screenSize.y - textHeight) / 2.0f, textPaint);
 
         }
     }
