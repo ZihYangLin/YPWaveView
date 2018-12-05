@@ -175,9 +175,7 @@ public class YPWaveView extends View {
                 @Override
                 public void run() {
                     shiftX1 += waveVector; //位移量
-                    long time = System.currentTimeMillis();
                     createShader();
-                    System.out.println("time=>" + (System.currentTimeMillis() - time));
                     Message message = Message.obtain(uiHandler);
                     message.sendToTarget();
                     if (isAnimation) {

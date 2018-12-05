@@ -214,7 +214,6 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
         waveView2.setListener { progress, max ->
             mValueList.add("progress=>$progress, max=>$max")
             mValueAdapter?.notifyDataSetChanged()
-            System.out.println("YPWaveView's progress => $progress")
         }
     }
 
