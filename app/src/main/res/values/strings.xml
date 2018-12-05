@@ -17,5 +17,6 @@
     <string name="heart">HEART</string>
     <string name="star">STAR</string>
     <string name="hide_text">Hide Percent Text</string>
+    <string name="shape_padding">Shape padding</string>
     <string name="spike_count">spikes(STAR)</string>
 </resources>

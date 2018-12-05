@@ -132,6 +132,18 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 waveView2.setStarSpikes(progress + 3)
             }
         })
+
+        seekbar_padding.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setPadding(progress)
+            }
+        })
         switch_animation.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 waveView2.startAnimation()
