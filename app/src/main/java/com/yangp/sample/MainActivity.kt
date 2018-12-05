@@ -193,17 +193,19 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
         waveView2.setWaveVector(seekbar_offset.progress.toFloat())
         waveView2.setWaveOffset(seekbar_waveoffset.progress)
         waveView2.setWaveStrong(seekbar_waveStrong.progress)
+        waveView2.setListener { progress, _ -> System.out.println("YPWaveView's progress => $progress") }
     }
 
     override fun onPause() {
         super.onPause()
+        waveView2.listener = null
         viewFrontWave.setOnClickListener(null)
         viewBehindWave.setOnClickListener(null)
         viewBorde.setOnClickListener(null)
         viewText.setOnClickListener(null)
     }
 
-    public fun onRefresh(v: View) {
+    fun onRefresh(v: View) {
         //創建水位動畫Set
         val animatorSet = AnimatorSet()
         val animPay = ObjectAnimator.ofInt(

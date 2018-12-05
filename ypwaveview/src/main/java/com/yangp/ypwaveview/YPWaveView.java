@@ -85,6 +85,7 @@ public class YPWaveView extends View {
     private int mSpikes = DEFAULT_SPIKE_COUNT;
     private Shape mShape = Shape.CIRCLE;
     private int value = 0; //寬或高的最小值
+    private OnWaveStuffListener mListener;
 
 
     public YPWaveView(Context context) {
@@ -134,11 +135,18 @@ public class YPWaveView extends View {
      */
     public void setProgress(int progress) {
         if (progress <= mMax) {
+            if (mListener != null) {
+                mListener.onStuffing(progress, mMax);
+            }
             mProgress = progress;
             createShader();
             Message message = Message.obtain(uiHandler);
             message.sendToTarget();
         }
+    }
+
+    public int getProgress() {
+        return mProgress;
     }
 
     public void startAnimation() {
@@ -163,6 +171,14 @@ public class YPWaveView extends View {
         isAnimation = false;
     }
 
+    public OnWaveStuffListener getListener() {
+        return mListener;
+    }
+
+    public void setListener(OnWaveStuffListener mListener) {
+        this.mListener = mListener;
+    }
+
     /**
      * 設定最大值
      */
@@ -175,6 +191,10 @@ public class YPWaveView extends View {
                 message.sendToTarget();
             }
         }
+    }
+
+    public int getMax() {
+        return mMax;
     }
 
     /**
@@ -281,7 +301,7 @@ public class YPWaveView extends View {
         }
         this.mSpikes = count;
         if (value != 0) {
-             /*===星星路徑===*/
+            /*===星星路徑===*/
             int wOffset = (getWidth() - value) / 2;
             int hOffset = (getHeight() - value) / 2;
             pathStar = drawStart(value / 2 + wOffset, value / 2 + hOffset + (int) mBorderWidth, mSpikes, value / 2 - (int) mBorderWidth, value / 4);
@@ -416,7 +436,7 @@ public class YPWaveView extends View {
             float y1 = (float) (waveLevel * Math.sin(w * x1 + shiftX1) + level);
             canvas.drawLine((float) x1, y1, (float) x1, y2, wavePaint);
         }
-     
+
         /*建立前波*/
         wavePaint.setColor(mFrontWaveColor);
         for (int x1 = 0; x1 < x2; x1++) {
@@ -485,7 +505,7 @@ public class YPWaveView extends View {
                 break;
         }
         if (!isHideText) {
-              /*建立百分比文字*/
+            /*建立百分比文字*/
             float percent = (mProgress * 100) / (float) mMax;
             String text = String.format(Locale.TAIWAN, "%.1f", percent) + "%";
             TextPaint textPaint = new TextPaint();
