@@ -61,6 +61,7 @@ XML
         app:shapeType="heart"
         app:strong="100"
         app:textHidden="false"
+        app:shapePadding="30dp"
         app:textColor="#ffffff" />
 ```
 
