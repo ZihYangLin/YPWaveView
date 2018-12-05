@@ -12,6 +12,13 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <ListView
+            android:id="@+id/listView"
+            android:stackFromBottom="true"
+            android:transcriptMode="normal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <com.yangp.ypwaveview.YPWaveView
             android:id="@+id/waveView2"
             android:layout_width="match_parent"

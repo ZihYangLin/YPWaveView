@@ -410,7 +410,7 @@ public class YPWaveView extends View {
      * B(t) = X(1-t)^2 + 2t(1-t)Y + Zt^2 , 0 <= t <= n
      */
     private void createShader() {
-        if (getWidth() <= 0 && getHeight() <= 0) {
+        if (getWidth() <= 0 || getHeight() <= 0) {
             return;
         }
         double w = (2.0f * Math.PI) / value;
