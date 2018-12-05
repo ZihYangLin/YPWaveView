@@ -66,12 +66,13 @@ Download
 <dependency>
   <groupId>com.yangping</groupId>
   <artifactId>ypwaveview</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
+  <type>pom</type>
 </dependency>
 ```
 or Gradle ( jcenter ):
 ```groovy
-implementation 'com.yangping:ypwaveview:1.0.2'
+implementation 'com.yangping:ypwaveview:1.0.3'
 ```
 ### License
 ```
