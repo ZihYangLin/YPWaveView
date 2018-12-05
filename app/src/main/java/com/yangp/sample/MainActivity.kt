@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
+import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import com.yangp.ypwaveview.YPWaveView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -49,6 +50,8 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
     private var colorArray: IntArray? = null
     private var recyclerView: RecyclerView? = null
     private var colorPicker: AlertDialog? = null
+    private var mValueList = ArrayList<String>()
+    private var mValueAdapter: ArrayAdapter<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -129,6 +132,18 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
                 waveView2.setStarSpikes(progress + 3)
             }
         })
+
+        seekbar_padding.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                waveView2.setShapePadding(progress.toFloat())
+            }
+        })
         switch_animation.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 waveView2.startAnimation()
@@ -158,6 +173,9 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
         }
 
+        mValueList.clear()
+        mValueAdapter = ArrayAdapter<String>(this, R.layout.text_item, mValueList)
+        listView.adapter = mValueAdapter
 
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
@@ -193,17 +211,22 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
         waveView2.setWaveVector(seekbar_offset.progress.toFloat())
         waveView2.setWaveOffset(seekbar_waveoffset.progress)
         waveView2.setWaveStrong(seekbar_waveStrong.progress)
+        waveView2.setListener { progress, max ->
+            mValueList.add("progress=>$progress, max=>$max")
+            mValueAdapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onPause() {
         super.onPause()
+        waveView2.listener = null
         viewFrontWave.setOnClickListener(null)
         viewBehindWave.setOnClickListener(null)
         viewBorde.setOnClickListener(null)
         viewText.setOnClickListener(null)
     }
 
-    public fun onRefresh(v: View) {
+    fun onRefresh(v: View) {
         //創建水位動畫Set
         val animatorSet = AnimatorSet()
         val animPay = ObjectAnimator.ofInt(

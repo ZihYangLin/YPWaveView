@@ -17,5 +17,6 @@
     <string name="heart">心型</string>
     <string name="star">星型</string>
     <string name="hide_text">隱藏百分比</string>
+    <string name="shape_padding">形狀內縮</string>
     <string name="spike_count">角數(星型)</string>
 </resources>

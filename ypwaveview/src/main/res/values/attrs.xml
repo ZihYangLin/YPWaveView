@@ -15,6 +15,7 @@
     <attr name="textColor" format="color" />
     <attr name="animatorEnable" format="boolean" />
     <attr name="textHidden" format="boolean" />
+    <attr name="shapePadding" format="dimension" />
 
     <declare-styleable name="YPWaveView">
         <attr name="progress" />
@@ -28,5 +29,6 @@
         <attr name="animatorEnable" />
         <attr name="shapeType" />
         <attr name="textHidden" />
+        <attr name="shapePadding" />
     </declare-styleable>
 </resources>
