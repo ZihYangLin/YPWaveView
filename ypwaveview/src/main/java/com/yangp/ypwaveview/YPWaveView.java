@@ -74,10 +74,10 @@ public class YPWaveView extends View {
     private static final boolean DEFAULT_ENABLE_ANIMATION = false;
     private static final boolean DEFAULT_HIDE_TEXT = false;
     private static final int DEFAULT_SPIKE_COUNT = 5;
-    private static final int DEFAULT_PADDING = 0;
+    private static final float DEFAULT_PADDING = 0f;
 
     /*參數值*/
-    private int mPadding = DEFAULT_PADDING; //內縮
+    private float mShapePadding = DEFAULT_PADDING; //內縮
     private int mProgress = DEFAULT_PROGRESS; //水位
     private int mMax = DEFAULT_MAX; //水位最大值
     private int mFrontWaveColor = DEFAULT_FRONT_WAVE_COLOR; //前面水波顏色
@@ -116,6 +116,7 @@ public class YPWaveView extends View {
         mBorderWidth = attributes.getDimension(R.styleable.YPWaveView_borderWidthSize, DEFAULT_BORDER_WIDTH);
         mStrong = attributes.getInt(R.styleable.YPWaveView_strong, DEFAULT_STRONG);
         mShape = Shape.fromValue(attributes.getInt(R.styleable.YPWaveView_shapeType, 1));
+        mShapePadding = attributes.getDimension(R.styleable.YPWaveView_shapePadding, DEFAULT_PADDING);
         isAnimation = attributes.getBoolean(R.styleable.YPWaveView_animatorEnable, DEFAULT_ENABLE_ANIMATION);
         isHideText = attributes.getBoolean(R.styleable.YPWaveView_textHidden, DEFAULT_HIDE_TEXT);
 
@@ -274,8 +275,8 @@ public class YPWaveView extends View {
     /**
      * 設定內縮
      */
-    public void setPadding(int mPadding) {
-        this.mPadding = mPadding;
+    public void setShapePadding(int mPadding) {
+        this.mShapePadding = mPadding;
         resetShapes();
         Message message = Message.obtain(uiHandler);
         message.sendToTarget();
@@ -385,22 +386,22 @@ public class YPWaveView extends View {
             case STAR:
                 /*===星星路徑===*/
                 mPathBorder = drawStart(radius / 2 + cx, radius / 2 + cy + (int) mBorderWidth, mSpikes, radius / 2 - (int) mBorderWidth, radius / 4);
-                mPathContent = drawStart(radius / 2 + cx, radius / 2 + cy + (int) mBorderWidth, mSpikes, radius / 2 - (int) mBorderWidth - mPadding, radius / 4 - mPadding);
+                mPathContent = drawStart(radius / 2 + cx, radius / 2 + cy + (int) mBorderWidth, mSpikes, radius / 2 - (int) mBorderWidth - (int) mShapePadding, radius / 4 - (int) mShapePadding);
                 break;
             case HEART:
                 /*===愛心路徑===*/
                 mPathBorder = drawHeart(cx, cy, radius);
-                mPathContent = drawHeart(cx + (mPadding / 2), cy + (mPadding / 2), radius - mPadding);
+                mPathContent = drawHeart(cx + ((int) mShapePadding / 2), cy + ((int) mShapePadding / 2), radius - (int) mShapePadding);
                 break;
             case CIRCLE:
                 /*===圓形路徑===*/
                 mPathBorder = drawCircle(cx, cy, radius);
-                mPathContent = drawCircle(cx + (mPadding / 2), cy + (mPadding / 2), radius - mPadding);
+                mPathContent = drawCircle(cx + ((int) mShapePadding / 2), cy + ((int) mShapePadding / 2), radius - (int) mShapePadding);
                 break;
             case SQUARE:
                 /*===方形路徑===*/
                 mPathBorder = drawSquare(cx, cy, radius);
-                mPathContent = drawSquare(cx + (mPadding / 2), cy + (mPadding / 2), radius - mPadding);
+                mPathContent = drawSquare(cx + ((int) mShapePadding / 2), cy + ((int) mShapePadding / 2), radius - (int) mShapePadding);
                 break;
         }
 
@@ -419,7 +420,7 @@ public class YPWaveView extends View {
         path.lineTo(cx, cy + mBorderWidth);
         path.close();
         return path;
-    } 
+    }
 
     private Path drawCircle(int cx, int cy, int radius) {
         Path path = new Path();
@@ -427,7 +428,7 @@ public class YPWaveView extends View {
         path.close();
         return path;
     }
-    
+
     private Path drawHeart(int cx, int cy, int radius) {
         Path path = new Path();
         /*起此點*/

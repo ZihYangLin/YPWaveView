@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setPadding(progress)
+                waveView2.setShapePadding(progress)
             }
         })
         switch_animation.setOnCheckedChangeListener { _, isChecked ->
