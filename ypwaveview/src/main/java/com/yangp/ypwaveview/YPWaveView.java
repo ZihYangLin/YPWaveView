@@ -494,7 +494,7 @@ public class YPWaveView extends View {
         Bitmap bitmap = Bitmap.createBitmap(viewSize, viewSize, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
 
-        float level = ((((float) (mMax - mProgress)) / (float) mMax) * viewSize) + ((viewSize / 2) - (viewSize / 2)); //水位的高度
+        float level = ((((float) (mMax - mProgress)) / (float) mMax) * viewSize) + ((screenSize.y / 2) - (viewSize / 2)); //水位的高度
         int x2 = viewSize + 1;//寬度
         int y2 = viewSize + 1;//高度
         float zzz = (((float) viewSize * ((waveOffset - 50) / 100f)) / ((float) viewSize / 6.25f));
