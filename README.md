@@ -1,9 +1,8 @@
-# YPWaveView
+# YPWaveView<a href='https://play.google.com/store/apps/details?id=com.yangping.ypwaveview'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="50px"/></a>
+
 
 A wave-like progressbar on Android which has four shapes, circle, square, heart and star.
 
-<br />
-<a href='https://play.google.com/store/apps/details?id=com.yangping.ypwaveview'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="50px"/></a>
 
 Sample
 ======
@@ -55,17 +54,17 @@ XML
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:animatorEnable="false"
+        app:textHidden="false"
+        app:shapeType="heart"
+        app:frontColor="#1f3bed"
         app:behideColor="#4e99e6"
         app:borderColor="#ff0000"
         app:borderWidthSize="4dp"
-        app:frontColor="#1f3bed"
+        app:textColor="#15DF89"
         app:max="1000"
-        app:progress="757"
-        app:shapeType="heart"
+        app:progress="765"
         app:strong="100"
-        app:textHidden="false"
-        app:shapePadding="30dp"
-        app:textColor="#15DF89" />
+        app:shapePadding="30dp"/>
 ```
 
 Download
