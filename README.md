@@ -2,6 +2,9 @@
 
 A wave-like progressbar on Android which has four shapes, circle, square, heart and star.
 
+<br />
+<a href='https://play.google.com/store/apps/details?id=com.yangping.ypwaveview'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="50px"/></a>
+
 Sample
 ======
 
