@@ -71,15 +71,15 @@ Download
 ========
 ```xml
 <dependency>
-  <groupId>com.yangping</groupId>
+  <groupId>com.yangpingapps</groupId>
   <artifactId>ypwaveview</artifactId>
-  <version>1.0.3</version>
-  <type>pom</type>
+  <version>1.0.4</version>
+  <type>aar</type>
 </dependency>
 ```
-or Gradle ( jcenter ):
+or Gradle ( mavenCentral ):
 ```groovy
-implementation 'com.yangping:ypwaveview:1.0.3'
+implementation 'com.yangpingapps:ypwaveview:1.0.4'
 ```
 ### License
 ```
