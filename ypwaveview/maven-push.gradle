@@ -12,7 +12,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             // group id，发布后引用的依赖的 group id
-            groupId 'com.yangping'
+            groupId 'com.yangpingapps'
             // 发布后引用的依赖的 artifact id
             artifactId 'ypwaveview'
             // 发布的版本
