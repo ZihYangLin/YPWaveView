@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply from: './maven-push.gradle'
 
 android {
-    compileSdkVersion 16
+    compileSdkVersion 33
     defaultConfig {
         minSdkVersion 16
         versionCode 3
