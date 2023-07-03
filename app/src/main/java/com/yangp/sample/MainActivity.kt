@@ -3,17 +3,17 @@ package com.yangp.sample
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.ArrayAdapter
 import android.widget.SeekBar
+import com.yangp.sample.databinding.ActivityMainBinding
 import com.yangp.ypwaveview.YPWaveView
-import kotlinx.android.synthetic.main.activity_main.*
 
 interface OnColorClickedListener {
     fun onClick(color: Int)
@@ -23,25 +23,28 @@ enum class ViewType {
     FRONT, BEHIND, BORDE, TEXT
 }
 
+private lateinit var binding: ActivityMainBinding
+
 class MainActivity : AppCompatActivity(), OnColorClickedListener {
     override fun onClick(color: Int) {
         when (viewType) {
             ViewType.FRONT -> {
-                viewFrontWave.setBackgroundColor(color)
-                waveView2.setFrontWaveColor(color)
+                binding.viewFrontWave.setBackgroundColor(color)
+                binding.waveView2.setFrontWaveColor(color)
             }
             ViewType.BEHIND -> {
-                viewBehindWave.setBackgroundColor(color)
-                waveView2.setBehindWaveColor(color)
+                binding.viewBehindWave.setBackgroundColor(color)
+                binding.waveView2.setBehindWaveColor(color)
             }
             ViewType.BORDE -> {
-                viewBorde.setBackgroundColor(color)
-                waveView2.setBorderColor(color)
+                binding.viewBorde.setBackgroundColor(color)
+                binding.waveView2.setBorderColor(color)
             }
             ViewType.TEXT -> {
-                viewText.setBackgroundColor(color)
-                waveView2.setTextColor(color)
+                binding.viewText.setBackgroundColor(color)
+                binding.waveView2.setTextColor(color)
             }
+            else -> null
         }
         colorPicker?.dismiss()
     }
@@ -55,14 +58,17 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        viewFrontWave.setBackgroundColor(YPWaveView.DEFAULT_FRONT_WAVE_COLOR)
-        viewBehindWave.setBackgroundColor(YPWaveView.DEFAULT_BEHIND_WAVE_COLOR)
-        viewBorde.setBackgroundColor(YPWaveView.DEFAULT_BORDER_COLOR)
-        viewText.setBackgroundColor(YPWaveView.DEFAULT_TEXT_COLOR)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        binding.viewFrontWave.setBackgroundColor(YPWaveView.DEFAULT_FRONT_WAVE_COLOR)
+        binding.viewBehindWave.setBackgroundColor(YPWaveView.DEFAULT_BEHIND_WAVE_COLOR)
+        binding.viewBorde.setBackgroundColor(YPWaveView.DEFAULT_BORDER_COLOR)
+        binding.viewText.setBackgroundColor(YPWaveView.DEFAULT_TEXT_COLOR)
         colorArray = resources.getIntArray(R.array.rainbow)
 
-        seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -70,11 +76,11 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setAnimationSpeed(100 - progress)
+                binding.waveView2.setAnimationSpeed(100 - progress)
             }
         })
 
-        seekbar_width.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbarWidth.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -82,11 +88,11 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setBorderWidth(progress.toFloat())
+                binding.waveView2.setBorderWidth(progress.toFloat())
             }
         })
 
-        seekbar_offset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbarOffset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -94,11 +100,12 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setWaveVector(progress.toFloat())
+                binding.waveView2.setWaveVector(progress.toFloat())
             }
         })
 
-        seekbar_waveoffset.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbarWaveoffset.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -106,11 +113,12 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setWaveOffset(progress)
+                binding.waveView2.setWaveOffset(progress)
             }
         })
 
-        seekbar_waveStrong.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbarWaveStrong.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -118,10 +126,10 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setWaveStrong(progress)
+                binding.waveView2.setWaveStrong(progress)
             }
         })
-        seekbar_spikes.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbarSpikes.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -129,11 +137,11 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setStarSpikes(progress + 3)
+                binding.waveView2.setStarSpikes(progress + 3)
             }
         })
 
-        seekbar_padding.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.seekbarPadding.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
@@ -141,77 +149,84 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
             }
 
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                waveView2.setShapePadding(progress.toFloat())
+                binding.waveView2.setShapePadding(progress.toFloat())
             }
         })
-        switch_animation.setOnCheckedChangeListener { _, isChecked ->
+        binding.switchAnimation.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                waveView2.startAnimation()
+                binding.waveView2.startAnimation()
             } else {
-                waveView2.stopAnimation()
+                binding.waveView2.stopAnimation()
             }
         }
 
-        switch_hidden_text.setOnCheckedChangeListener { _, isChecked ->
-            waveView2.setHideText(isChecked)
+        binding.switchHiddenText.setOnCheckedChangeListener { _, isChecked ->
+            binding.waveView2.setHideText(isChecked)
         }
 
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+        binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioCircle -> {
-                    waveView2.setShape(YPWaveView.Shape.CIRCLE)
+                    binding.waveView2.setShape(YPWaveView.Shape.CIRCLE)
                 }
                 R.id.radioSquare -> {
-                    waveView2.setShape(YPWaveView.Shape.SQUARE)
+                    binding.waveView2.setShape(YPWaveView.Shape.SQUARE)
                 }
                 R.id.radioHeart -> {
-                    waveView2.setShape(YPWaveView.Shape.HEART)
+                    binding.waveView2.setShape(YPWaveView.Shape.HEART)
                 }
                 R.id.radioStar -> {
-                    waveView2.setShape(YPWaveView.Shape.STAR)
+                    binding.waveView2.setShape(YPWaveView.Shape.STAR)
                 }
+                else -> null
             }
         }
 
         mValueList.clear()
         mValueAdapter = ArrayAdapter<String>(this, R.layout.text_item, mValueList)
-        listView.adapter = mValueAdapter
+        binding.listView.adapter = mValueAdapter
 
         /*color picker*/
         val adapter = ColorAdapter(colorArray!!, this)
         recyclerView = layoutInflater.inflate(R.layout.color_picker, null) as RecyclerView
-        recyclerView!!.layoutManager = GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false)
+        recyclerView!!.layoutManager =
+            GridLayoutManager(
+                this,
+                3,
+                GridLayoutManager.VERTICAL,
+                false
+            )
         recyclerView!!.adapter = adapter
         colorPicker = AlertDialog.Builder(this)
-                .setView(recyclerView)
-                .create()
+            .setView(recyclerView)
+            .create()
     }
 
     override fun onResume() {
         super.onResume()
-        viewFrontWave.setOnClickListener {
+        binding.viewFrontWave.setOnClickListener {
             viewType = ViewType.FRONT
             colorPicker?.show()
         }
-        viewBehindWave.setOnClickListener {
+        binding.viewBehindWave.setOnClickListener {
             viewType = ViewType.BEHIND
             colorPicker?.show()
         }
-        viewBorde.setOnClickListener {
+        binding.viewBorde.setOnClickListener {
             viewType = ViewType.BORDE
             colorPicker?.show()
         }
-        viewText.setOnClickListener {
+        binding.viewText.setOnClickListener {
             viewType = ViewType.TEXT
             colorPicker?.show()
         }
 
-        waveView2.setAnimationSpeed(100 - seekbar.progress)
-        waveView2.setBorderWidth(seekbar_width.progress.toFloat())
-        waveView2.setWaveVector(seekbar_offset.progress.toFloat())
-        waveView2.setWaveOffset(seekbar_waveoffset.progress)
-        waveView2.setWaveStrong(seekbar_waveStrong.progress)
-        waveView2.setListener { progress, max ->
+        binding.waveView2.setAnimationSpeed(100 - binding.seekbar.progress)
+        binding.waveView2.setBorderWidth(binding.seekbarWidth.progress.toFloat())
+        binding.waveView2.setWaveVector(binding.seekbarOffset.progress.toFloat())
+        binding.waveView2.setWaveOffset(binding.seekbarWaveoffset.progress)
+        binding.waveView2.setWaveStrong(binding.seekbarWaveStrong.progress)
+        binding.waveView2.setListener { progress, max ->
             mValueList.add("progress=>$progress, max=>$max")
             mValueAdapter?.notifyDataSetChanged()
         }
@@ -219,25 +234,29 @@ class MainActivity : AppCompatActivity(), OnColorClickedListener {
 
     override fun onPause() {
         super.onPause()
-        waveView2.listener = null
-        viewFrontWave.setOnClickListener(null)
-        viewBehindWave.setOnClickListener(null)
-        viewBorde.setOnClickListener(null)
-        viewText.setOnClickListener(null)
+        binding.waveView2.listener = null
+        binding.viewFrontWave.setOnClickListener(null)
+        binding.viewBehindWave.setOnClickListener(null)
+        binding.viewBorde.setOnClickListener(null)
+        binding.viewText.setOnClickListener(null)
     }
 
     fun onRefresh(v: View) {
         //創建水位動畫Set
         val animatorSet = AnimatorSet()
         val animPay = ObjectAnimator.ofInt(
-                waveView2, "progress", 0, 476)
+            binding.waveView2, "progress", 0, 476
+        )
         animPay.duration = 1500
         animPay.interpolator = DecelerateInterpolator()
         animatorSet.playTogether(animPay)
         animatorSet.start()
     }
 
-    inner class ColorAdapter(private val colorArray: IntArray, private val listener: OnColorClickedListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    inner class ColorAdapter(
+        private val colorArray: IntArray,
+        private val listener: OnColorClickedListener
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             holder.itemView!!.setBackgroundColor(colorArray[position])
             holder.itemView!!.setOnClickListener { listener.onClick(colorArray[position]) }
